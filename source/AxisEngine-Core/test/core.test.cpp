@@ -1,19 +1,16 @@
 //
 // ProjectModuleSystem
-// core.test.cpp
+// Core.test.cpp
 //
 
 #include <iostream>
 
 #include <cassert>
 
-#include "../source/Kernel.hpp"
+#include "../source/AxisEngine.hpp"
+#include "../source/EntryPoint.hpp"
 
-int main(int argc, char** argv) {
+void AxisEngine::Initialize() {
     
-    std::cout << "[core.test.cpp] Start of main function..." << std::endl;
-    
-    THEKERNEL.Run();
-
-    std::cout << "[core.test.cpp] End of main function..." << std::endl;
+    std::cout << "[Core.test.cpp] Initialize..." << std::endl;
 }

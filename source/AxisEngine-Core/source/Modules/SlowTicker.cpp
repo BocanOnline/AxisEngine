@@ -7,7 +7,9 @@
 #include <memory>
 
 #include "../Kernel.hpp"
-#include "../Module.hpp"
+
+#include "../Events/IdleEvent.hpp"
+
 #include "SlowTicker.hpp"
 
 
@@ -23,15 +25,15 @@ Core::SlowTicker::~SlowTicker() {
     
 void Core::SlowTicker::OnModuleLoaded() {
 
-    this->RegisterForEvent(Core::Event::ON_IDLE);
-
-    std::cout << "[SlowTicker.cpp] SlowTicker registered for ON_IDLE..." << std::endl;
+    Core::IdleEvent on_idle_event;
+    auto on_idle_function = [this](std::shared_ptr<void> argument)
+                                { this->Core::SlowTicker::OnIdle(argument); };
+    this->RegisterForEvent(on_idle_event, on_idle_function);
+    
+    std::cout << "[SlowTicker.cpp] SlowTicker registered for IdleEvent..." << std::endl;
 }
 
 void Core::SlowTicker::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[SlowTicker.cpp] SlowTicker called by ON_IDLE" << std::endl; 
-
-    THEKERNEL.CallEvent(Core::Event::ON_SECOND_TICK, nullptr);
-
+    std::cout << "[SlowTicker.cpp] SlowTicker called by IdleEvent..." << std::endl; 
 }

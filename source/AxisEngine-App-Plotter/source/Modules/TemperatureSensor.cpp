@@ -1,0 +1,41 @@
+//
+// ProjectAxisEngine
+// TemperatureSensor.cpp
+//
+
+#include <iostream>
+#include <memory>
+
+#include "AxisEngine.hpp"
+#include "Events/IdleEvent.hpp"
+
+#include "../Events/TemperatureUnsafeEvent.hpp"
+#include "TemperatureSensor.hpp"
+
+Plotter::Module::TemperatureSensor::TemperatureSensor() {
+
+    std::cout << "[TemperatureSensor.cpp] TemperatureSensor created..." << std::endl;
+}
+
+Plotter::Module::TemperatureSensor::~TemperatureSensor() {
+
+    std::cout << "[TemperatureSensor.cpp] TemperatureSensor destroyed..." << std::endl;
+}
+    
+void Plotter::Module::TemperatureSensor::OnModuleLoaded() {
+
+    Core::IdleEvent on_idle_event;
+    auto on_idle_function = [this](std::shared_ptr<void> argument)
+                                { this->Plotter::Module::TemperatureSensor::OnIdle(argument); };
+    this->RegisterForEvent(on_idle_event, on_idle_function);
+
+    std::cout << "[TemperatureSensor.cpp] TemperatureSensor registered for IdleEvent..." << std::endl;
+}
+
+void Plotter::Module::TemperatureSensor::OnIdle(std::shared_ptr<void> argument) {
+
+    std::cout << "[TemperatureSensor.cpp] TemperatureSensor called by IdleEvent..." << std::endl; 
+   
+    TemperatureUnsafeEvent on_temperature_unsafe_event;
+    AxisEngine::CallEvent(on_temperature_unsafe_event, nullptr);
+}

@@ -10,16 +10,16 @@
 
 namespace Core {
 
-class GcodeDispatch : public Module {
+    class GcodeDispatch : public Module {
 
-public:
-    GcodeDispatch();
-    virtual ~GcodeDispatch() override;
-    
-    virtual void OnModuleLoaded() override;
+    public:
+        GcodeDispatch();
+        virtual ~GcodeDispatch() override;
+        
+        virtual void OnModuleLoaded() override;
 
-    void OnConsoleLineReceived(std::shared_ptr<void> argument) override;
+        void OnConsoleLineReceived(std::shared_ptr<void> argument) override;
 
-};
+    };
 
 } // namespace Core

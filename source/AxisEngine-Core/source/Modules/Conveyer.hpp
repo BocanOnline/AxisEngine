@@ -10,17 +10,17 @@
 
 namespace Core {
 
-class Conveyer : public Module {
+    class Conveyer : public Module {
 
-public:
-    Conveyer();
-    virtual ~Conveyer() override;
-    
-    virtual void OnModuleLoaded() override;
+    public:
+        Conveyer();
+        virtual ~Conveyer() override;
+        
+        virtual void OnModuleLoaded() override;
 
-    void OnIdle(std::shared_ptr<void> argument) override;
-    void OnHalt(std::shared_ptr<void> argument) override;
+        void OnIdle(std::shared_ptr<void> argument) override;
+        void OnHalt(std::shared_ptr<void> argument) override;
 
-};
+    };
 
 } // namespace Core

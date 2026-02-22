@@ -7,7 +7,9 @@
 #include <memory>
 
 #include "../Kernel.hpp"
-#include "../Module.hpp"
+
+#include "../Events/ConsoleLineReceivedEvent.hpp"
+
 #include "GcodeDispatch.hpp"
 
 
@@ -23,18 +25,15 @@ Core::GcodeDispatch::~GcodeDispatch() {
     
 void Core::GcodeDispatch::OnModuleLoaded() {
 
-    this->RegisterForEvent(Core::Event::ON_CONSOLE_LINE_RECEIVED);
+    Core::ConsoleLineReceivedEvent on_console_line_received_event;
+    auto on_console_line_received_function = [this](std::shared_ptr<void> argument)
+                                { this->Core::GcodeDispatch::OnConsoleLineReceived(argument); };
+    this->RegisterForEvent(on_console_line_received_event, on_console_line_received_function);
 
-    std::cout << 
-        "[GcodeDispatch.cpp] GcodeDispatch registered for ON_CONSOLE_LINE_RECEIVED..." 
-        << std::endl;
+    std::cout << "[GcodeDispatch.cpp] GcodeDispatch registered for ConsoleLineReceivedEvent..." << std::endl;
 }
 
 void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) {
 
-    std::cout << 
-        "[GcodeDispatch.cpp] GcodeDispatch called by ON_CONSOLE_LINE_RECEIVED" 
-        << std::endl; 
-
-    THEKERNEL.CallEvent(Core::Event::ON_GCODE_RECEIVED, nullptr);
+    std::cout << "[GcodeDispatch.cpp] GcodeDispatch called by ConsoleLineReceivedEvent..." << std::endl; 
 }

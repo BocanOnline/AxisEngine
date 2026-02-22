@@ -6,4 +6,4 @@ project_root="$(cd "${script_dir}/.." && pwd)"
 
 cd "$project_root"
 
-./build-release/source/ModuleSystem-App/ModuleSystem-App
+./build-release/source/AxisEngine-App/AxisEngine-App

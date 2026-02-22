@@ -7,25 +7,29 @@
 #include <memory>
 
 #include "Actuator.hpp"
+#include "Events/GcodeReceivedEvent.hpp"
 
-Plotter::Actuator::Actuator() {
+Plotter::Module::Actuator::Actuator() {
 
     std::cout << "[Actuator.cpp] Actuator created..." << std::endl;
 }
 
-Plotter::Actuator::~Actuator() {
+Plotter::Module::Actuator::~Actuator() {
 
     std::cout << "[Actuator.cpp] Actuator destroyed..." << std::endl;
 }
     
-void Plotter::Actuator::OnModuleLoaded() {
+void Plotter::Module::Actuator::OnModuleLoaded() {
 
-    this->RegisterForEvent(Core::Event::ON_GCODE_RECEIVED);
+    Core::GcodeReceivedEvent on_gcode_received_event;
+    auto on_gcode_received_function = [this](std::shared_ptr<void> argument)
+                                { this->Plotter::Module::Actuator::OnGcodeReceived(argument); };
+    this->RegisterForEvent(on_gcode_received_event, on_gcode_received_function);
 
-    std::cout << "[Actuator.cpp] Actuator registered for ON_GCODE_RECEIVED..." << std::endl;
+    std::cout << "[Actuator.cpp] Actuator registered for GcodeReceivedEvent..." << std::endl;
 }
 
-void Plotter::Actuator::OnGcodeReceived(std::shared_ptr<void> argument) {
+void Plotter::Module::Actuator::OnGcodeReceived(std::shared_ptr<void> argument) {
 
-    std::cout << "[Actuator.cpp] Actuator called by ON_GCODE_RECEIVED..." << std::endl; 
+    std::cout << "[Actuator.cpp] Actuator called by GcodeReceivedEvent..." << std::endl; 
 }

@@ -4,64 +4,64 @@
 //
 #pragma once
 
-#include <array>
+#include <functional>
+#include <unordered_map>
 #include <vector>
 #include <memory>
 
 #include "Module.hpp"
-
-#define THEKERNEL Core::Kernel::Get()
+#include "Event.hpp"
 
 namespace Core {
 
-class SerialConsole;
-class GcodeDispatch;
-class SlowTicker;
-class Robot;
-class Conveyer;
+    class OnConsoleLineReceived;
+    class OnEnable;
+    class OnGcodeReceived;
+    class OnHalt;
+    class OnIdle;
+    class OnMainLoop;
+    class OnSecondTick;
 
-class Kernel {
+    class SerialConsole;
+    class GcodeDispatch;
+    class SlowTicker;
+    class Robot;
+    class Conveyer;
 
-public:
-    static Kernel& Get() { return s_Instance; } 
+    class Kernel {
 
-    void Run();
+    public:
+        static Kernel& Get() { return s_Instance; } 
 
-    void AddModule(std::shared_ptr<Module> module);
-    void RegisterForEvent(Core::Event event, std::shared_ptr<Module> module);
-    bool HasEvent(Core::Event event, std::shared_ptr<Module> module);
-    void CallEvent(Core::Event event, std::shared_ptr<void> argument);
+        void Run();
 
-public:
-    std::shared_ptr<SerialConsole> serialconsole;
-    std::shared_ptr<GcodeDispatch> gcodedispatch;
-    std::shared_ptr<SlowTicker>    slowticker;
-    std::shared_ptr<Robot>         robot;
-    std::shared_ptr<Conveyer>      conveyer;
+        void AddModule(std::shared_ptr<Module> module);
+        void RegisterForEvent(Event& event, 
+                              std::function<void(std::shared_ptr<void>)> function);
+        void UnRegisterForEvent(Event& event, std::shared_ptr<Module> module);
+        bool HasEvent(Event& event);
+        void CallEvent(Event& event, std::shared_ptr<void> argument);
 
-private:
-     Kernel(); 
-     Kernel(const Core::Kernel&) = delete;
-    ~Kernel();
+    public:
+        std::shared_ptr<SerialConsole>          serialconsole;
+        std::shared_ptr<GcodeDispatch>          gcodedispatch;
+        std::shared_ptr<SlowTicker>             slowticker;
+        std::shared_ptr<Robot>                  robot;
+        std::shared_ptr<Conveyer>               conveyer;
 
-private:
-    static Kernel s_Instance;
-    
-    std::array<std::vector<std::shared_ptr<Module>>, 
-        static_cast<int>(Core::Event::NUMBER_OF_DEFINED_EVENTS)> m_Hooks;
-    
-    // m_Hooks is an array of vectors storing the address of registered modules for each event.
-    //
-    // Array (Columns) m_Hooks
-    // Vectors (Rows, one for each defined event)
-    // 0 (ON_MAIN_LOOP): SerialConsole, GcodeDispatcher, Robot, ... 
-    // 1 (ON_CONSOLE_LINE_RECEIVED): GcodeDispatcher 
-    // 2 (ON_GCODE_RECEIVED): Robot, Conveyer, ...
-    // 3 (ON_IDLE): SerialConsole, Robot, Conveyer, ...
-    // ...
+    private:
+         Kernel(); 
+         Kernel(const Kernel&) = delete;
+        ~Kernel();
 
-    // TODO: add config data/methods
+    private:
+        static Kernel s_Instance;
 
-};
+        std::unordered_map<std::string, 
+                 std::vector<std::function<void(std::shared_ptr<void>)>>> m_CallbackTable;
+        
+        // TODO: add config data/methods
+
+    };
 
 } // namespace Core

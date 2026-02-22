@@ -1,0 +1,24 @@
+//
+// ProjectAxisEngine
+// HaltEvent.hpp
+//
+#pragma once
+
+#include <string>
+
+#include "../Event.hpp"
+
+
+namespace Core {
+
+    class HaltEvent : public Core::Event {
+
+    public:
+        HaltEvent();
+        virtual ~HaltEvent() override;
+        
+        virtual std::string GetName() const override;
+
+    };
+
+} // namespace Core

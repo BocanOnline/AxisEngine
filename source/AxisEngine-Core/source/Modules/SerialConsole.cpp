@@ -7,7 +7,10 @@
 #include <memory>
 
 #include "../Kernel.hpp"
-#include "../Module.hpp"
+
+#include "../Events/MainLoopEvent.hpp"
+#include "../Events/IdleEvent.hpp"
+
 #include "SerialConsole.hpp"
 
 
@@ -23,22 +26,28 @@ Core::SerialConsole::~SerialConsole() {
     
 void Core::SerialConsole::OnModuleLoaded() {
 
-    this->RegisterForEvent(Core::Event::ON_MAIN_LOOP);
-    this->RegisterForEvent(Core::Event::ON_IDLE);
-
-    std::cout << "[SerialConsole.cpp] SerialConsole registered for ON_MAIN_LOOP..." << std::endl;
-    std::cout << "[SerialConsole.cpp] SerialConsole registered for ON_IDLE..." << std::endl;
+    Core::MainLoopEvent on_main_loop_event;
+    auto on_main_loop_function = [this](std::shared_ptr<void> argument)
+                                { this->Core::SerialConsole::OnMainLoop(argument); };
+    this->RegisterForEvent(on_main_loop_event, on_main_loop_function);
+    
+    std::cout << "[SerialConsole.cpp] SerialConsole registered for MainLoopEvent..." << std::endl;
+    
+    Core::IdleEvent on_idle_event;
+    auto on_idle_function = [this](std::shared_ptr<void> argument)
+                                { this->Core::SerialConsole::OnIdle(argument); };
+    this->RegisterForEvent(on_idle_event, on_idle_function);
+    
+    std::cout << "[SerialConsole.cpp] SerialConsole registered for IdleEvent..." << std::endl;
 
 }
 
 void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
 
-    std::cout << "[SerialConsole.cpp] SerialConsole called by ON_MAIN_LOOP" << std::endl;
-    THEKERNEL.CallEvent(Core::Event::ON_CONSOLE_LINE_RECEIVED, nullptr);
-    
+    std::cout << "[SerialConsole.cpp] SerialConsole called by MainLoopEvent..." << std::endl;
 }
 
 void Core::SerialConsole::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[SerialConsole.cpp] SerialConsole called by ON_IDLE" << std::endl;
+    std::cout << "[SerialConsole.cpp] SerialConsole called by IdleEvent..." << std::endl;
 }

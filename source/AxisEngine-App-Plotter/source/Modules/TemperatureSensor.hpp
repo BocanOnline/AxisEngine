@@ -1,25 +1,24 @@
 //
 // ProjectAxisEngine
-// SlowTicker.hpp
+// TemperatureSensor.hpp
 //
 #pragma once
 
 #include <memory>
 
-#include "../Module.hpp"
+#include "Module.hpp"
 
-namespace Core {
+namespace Plotter::Module {
 
-    class SlowTicker : public Module {
+    class TemperatureSensor : public Core::Module {
 
     public:
-        SlowTicker();
-        virtual ~SlowTicker() override;
+        TemperatureSensor();
+        virtual ~TemperatureSensor() override;
         
         virtual void OnModuleLoaded() override;
 
         void OnIdle(std::shared_ptr<void> argument) override;
-
     };
 
 } // namespace Core

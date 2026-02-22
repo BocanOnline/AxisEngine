@@ -1,6 +1,6 @@
 //
 // ProjectAxisEngine
-// Actuator.hpp
+// Coolant.hpp
 //
 #pragma once
 
@@ -10,15 +10,15 @@
 
 namespace Plotter::Module {
 
-    class Actuator : public Core::Module {
+    class Coolant : public Core::Module {
 
     public:
-        Actuator();
-        virtual ~Actuator() override;
+        Coolant();
+        virtual ~Coolant() override;
         
         virtual void OnModuleLoaded() override;
 
-        void OnGcodeReceived(std::shared_ptr<void> argument) override;
+        void OnTemperatureUnsafe(std::shared_ptr<void> argument);
 
     };
 

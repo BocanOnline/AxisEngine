@@ -6,8 +6,9 @@
 #include "Kernel.hpp"
 #include "Module.hpp"
 
-void Core::Module::RegisterForEvent(Core::Event event) {
+void Core::Module::RegisterForEvent(Core::Event &event, 
+        std::function<void(std::shared_ptr<void>)> function) {
 
-    THEKERNEL.RegisterForEvent(event, shared_from_this());
+    Core::Kernel::Get().RegisterForEvent(event, function);
 }
 
