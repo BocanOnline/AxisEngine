@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// SecondTickEvent.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: SecondTickEvent.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
 #include "SecondTickEvent.hpp"

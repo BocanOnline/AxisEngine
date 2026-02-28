@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// TemperatureSensor.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-App-Plotter
+// file: TemperatureSensor.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <memory>
 

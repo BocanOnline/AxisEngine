@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// Conveyer.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: Conveyer.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <memory>
 #include <functional>

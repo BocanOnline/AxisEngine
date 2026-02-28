@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// MainLoopEvent.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: MainLoopEvent.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
 #include "MainLoopEvent.hpp"

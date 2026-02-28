@@ -1,7 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// ConsoleLineReceivedEvent.hpp
-//
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: ConsoleLineReceivedEvent.hpp
+////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 #include <string>

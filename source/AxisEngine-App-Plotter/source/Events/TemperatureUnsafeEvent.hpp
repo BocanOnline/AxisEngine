@@ -1,8 +1,12 @@
-// ProjectAxisEngine
-// TemperatureUnsafeEvent.hpp
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-#pragma once
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-App-Plotter
+// file: TemperatureUnsafeEvent.hpp
+////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
 #include "Event.hpp"

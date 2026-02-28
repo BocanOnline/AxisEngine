@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// AxisEngine.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: AxisEngine.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "AxisEngine.hpp"
 #include "Kernel.hpp"
 #include "Module.hpp"

@@ -6,4 +6,4 @@ project_root="$(cd "${script_dir}/.." && pwd)"
 
 cd "$project_root"
 
-./build-debug/source/AxisEngine-App/AxisEngine-App
+./build-debug/source/AxisEngine-App-Plotter/AxisEngine-App-Plotter

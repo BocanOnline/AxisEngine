@@ -1,9 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// GcodeReceivedEvent.hpp
-//
-#pragma once
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: GcodeReceivedEvent.hpp
+////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
 #include "../Event.hpp"

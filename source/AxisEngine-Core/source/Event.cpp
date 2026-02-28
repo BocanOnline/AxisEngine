@@ -1,8 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
 //
-// ProjectAxisEngine
-// Event.cpp
-//
-
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: Event.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "Event.hpp"
 
 // Events are created on the stack by the Module that calls them.
