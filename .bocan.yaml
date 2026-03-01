@@ -1,4 +1,4 @@
-project: ProjectModuleSystem
+project: ProjectAxisEngine
 description: >
   Implementation of the Module System that is part of the application design of
   Smoothieware (https://github.com/VandalForge/Smoothieware), the operating system
