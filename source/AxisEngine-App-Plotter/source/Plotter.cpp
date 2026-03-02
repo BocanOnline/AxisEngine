@@ -15,25 +15,18 @@
 #include "EntryPoint.hpp" // NOLINT
 
 // User Added Functionality
-#include "Modules/Actuator.hpp"
-#include "Modules/Coolant.hpp"
-#include "Modules/TemperatureSensor.hpp"
-    
-std::shared_ptr<Plotter::Module::Actuator> actuator;
-std::shared_ptr<Plotter::Module::Coolant> coolant;
-std::shared_ptr<Plotter::Module::TemperatureSensor> temperatureSensor;
 
 void AxisEngine::Initialize() {
     
     std::cout << "[Plotter.cpp] start of Initialize()" << std::endl;
 
-    actuator = std::make_shared<Plotter::Module::Actuator>();
-    coolant = std::make_shared<Plotter::Module::Coolant>();
-    temperatureSensor = std::make_shared<Plotter::Module::TemperatureSensor>();
+    // actuator = std::make_shared<Plotter::Module::Actuator>();
+    // coolant = std::make_shared<Plotter::Module::Coolant>();
+    // temperatureSensor = std::make_shared<Plotter::Module::TemperatureSensor>();
 
-    AxisEngine::AddModule(actuator);
-    AxisEngine::AddModule(coolant);
-    AxisEngine::AddModule(temperatureSensor);
+    // AxisEngine::AddModule(actuator);
+    // AxisEngine::AddModule(coolant);
+    // AxisEngine::AddModule(temperatureSensor);
     
     std::cout << "[Plotter.cpp] end of Initialize()..." << std::endl;
 }

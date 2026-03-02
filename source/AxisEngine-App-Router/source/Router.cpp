@@ -15,6 +15,13 @@
 #include "EntryPoint.hpp" // NOLINT
 
 // User Added Functionality
+#include "Modules/Actuator.hpp"
+#include "Modules/Coolant.hpp"
+#include "Modules/TemperatureSensor.hpp"
+    
+std::shared_ptr<Router::Module::Actuator> actuator;
+std::shared_ptr<Router::Module::Coolant> coolant;
+std::shared_ptr<Router::Module::TemperatureSensor> temperatureSensor;
 
 void AxisEngine::Initialize() {
     

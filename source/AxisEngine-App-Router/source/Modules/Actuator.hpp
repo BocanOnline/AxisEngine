@@ -4,24 +4,24 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-App-Plotter
-// file: Coolant.hpp
+// app: AxisEngine-App-Router
+// file: Actuator.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #include <memory>
 
 #include "Module.hpp"
 
-namespace Plotter::Module {
+namespace Router::Module {
 
-    class Coolant : public Core::Module {
+    class Actuator : public Core::Module {
 
     public:
-        Coolant();
-        virtual ~Coolant() override;
+        Actuator();
+        virtual ~Actuator() override;
         
         virtual void OnModuleLoaded() override;
 
-        void OnTemperatureUnsafe(std::shared_ptr<void> argument);
+        void OnGcodeReceived(std::shared_ptr<void> argument) override;
 
     };
 

@@ -4,18 +4,18 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-App-Plotter
+// app: AxisEngine-App-Router
 // file: TemperatureUnsafeEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
 #include "TemperatureUnsafeEvent.hpp"
 
-Plotter::TemperatureUnsafeEvent::TemperatureUnsafeEvent() {}
+Router::TemperatureUnsafeEvent::TemperatureUnsafeEvent() {}
 
-Plotter::TemperatureUnsafeEvent::~TemperatureUnsafeEvent() {}
+Router::TemperatureUnsafeEvent::~TemperatureUnsafeEvent() {}
 
-std::string Plotter::TemperatureUnsafeEvent::GetName() const {
+std::string Router::TemperatureUnsafeEvent::GetName() const {
 
     return "TEMPERATURE_UNSAFE";
 }

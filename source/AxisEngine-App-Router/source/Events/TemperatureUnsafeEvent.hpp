@@ -4,7 +4,7 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-App-Plotter
+// app: AxisEngine-App-Router
 // file: TemperatureUnsafeEvent.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #include <string>
@@ -12,7 +12,7 @@
 #include "Event.hpp"
 
 
-namespace Plotter {
+namespace Router {
 
     class TemperatureUnsafeEvent : public Core::Event {
 
@@ -24,4 +24,5 @@ namespace Plotter {
 
     };
 
-} // namespace Core
+} // namespace Router
+
