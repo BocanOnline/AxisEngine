@@ -9,4 +9,5 @@ windows:
       - cd ~/Developer/BocanOnline/ProjectAxisEngine/
   - window_name: agent
     shell_command_before:
+      - cd ~/Developer/BocanOnline/ProjectAxisEngine/
       - opencode

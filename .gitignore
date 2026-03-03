@@ -1,11 +1,15 @@
 ## Bocan Online Defaults
 
 # CMake Build Files and Directories
+build/
 build-debug/
 build-release/
 
 # macOS Artifacts
 .DS_Store
+
+# Python Artifacts
+__pycache__/
 
 ## GitHub Defaults
 # https://github.com/github/gitignore/blob/86922aee426c32ffb6098f9a38c42da75169501e/C%2B%2B.gitignore
