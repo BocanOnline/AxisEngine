@@ -12,7 +12,6 @@
 
 // Core Functionality
 #include "AxisEngine.hpp"
-#include "EntryPoint.hpp" // NOLINT
 
 // User Added Functionality
 

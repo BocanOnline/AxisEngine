@@ -7,6 +7,8 @@
 // app: AxisEngine-Core
 // file: AxisEngine.cpp
 ////////////////////////////////////////////////////////////////////////////////
+#include <iostream>
+
 #include "AxisEngine.hpp"
 #include "Kernel.hpp"
 #include "Module.hpp"
@@ -26,4 +28,18 @@ namespace AxisEngine {
 
         return Core::Kernel::Get().Run();
     }
+}
+
+#include <iostream>
+
+int main(int argc, char** argv) { // NOLINT
+
+    std::cout << "[AxisEngine.hpp] Start of main function..." << std::endl;
+    
+    AxisEngine::Initialize();
+
+    AxisEngine::Run();
+    
+    std::cout << "[AxisEngine.hpp] End of main function..." << std::endl;
+    return 0;
 }

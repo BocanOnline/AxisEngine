@@ -12,7 +12,6 @@
 #include <cassert>
 
 #include "../source/AxisEngine.hpp"
-#include "../source/EntryPoint.hpp"
 
 void AxisEngine::Initialize() {
     
