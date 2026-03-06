@@ -13,6 +13,10 @@
 #include "../Kernel.hpp"
 
 #include "../Events/ConsoleLineReceivedEvent.hpp"
+#include "../Events/GcodeReceivedEvent.hpp"
+
+#include "Utils/Structs/SerialMessage.hpp"
+#include "Utils/Structs/Gcode.hpp"
 
 #include "GcodeDispatch.hpp"
 
@@ -40,4 +44,88 @@ void Core::GcodeDispatch::OnModuleLoaded() {
 void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) {
 
     std::cout << "[GcodeDispatch.cpp] GcodeDispatch called by ConsoleLineReceivedEvent..." << std::endl; 
+
+    std::shared_ptr<Core::SerialMessage> message = std::static_pointer_cast<Core::SerialMessage>(argument);
+
+    if(message->message.front() != 'G' && message->message.front() != 'M') {
+
+        std::cout << "[GcodeDispatch.cpp] SerialMessage is not a supported GcodeCommand..." << std::endl;
+        return;
+    }
+        
+    std::cout << "[GcodeDispatch.cpp] GcodeCommand received..." << std::endl;
+
+    std::string raw_message = message->message;
+    std::shared_ptr<Core::Gcode> gcode = std::make_shared<Core::Gcode>();
+
+    std::string::size_type n;
+    std::string::size_type i;
+
+    // find and remove comments    
+    n = raw_message.find(';');
+    if(std::string::npos != n) {
+
+        raw_message.erase(n, (raw_message.length() - n));
+        std::cout << "[GcodeDispatch.cpp] Comments removed..." << std::endl;
+        std::cout << "[GcodeDispatch.cpp] " << raw_message << std::endl;
+    }
+
+    // remove trailing white space
+    while(raw_message.back() == ' ') {
+
+        raw_message.pop_back();
+    }
+    std::cout << "[GcodeDispatch.cpp] Trailing white space removed..." << std::endl;
+    std::cout << "[GcodeDispatch.cpp] " << raw_message << std::endl;
+
+    // parse commands and arguments
+    do {
+        i = 0;
+        n = raw_message.find(' ');
+
+        std::string sub_string;
+
+        if(std::string::npos != n) {
+            sub_string = raw_message.substr(i, n - i);
+            raw_message.erase(i, (n - i) + 1);
+        } else {
+            sub_string  = raw_message;
+        }
+        
+        if(sub_string.at(i) == 'G') {
+            gcode->has_g = true;
+            std::cout << "[GcodeDispatch.cpp] G-Code received..." << std::endl;
+            sub_string.erase(i, 1);
+            gcode->command = std::stoi(sub_string, &i);
+            std::cout << "[GcodeDispatch.cpp] Command: " << gcode->command  << std::endl;
+        }
+        else if(sub_string.at(i) == 'M') {
+            gcode->has_m = true;
+            std::cout << "[GcodeDispatch.cpp] M-Code received..." << std::endl;
+            sub_string.erase(i, 1);
+            gcode->command = std::stoi(sub_string, &i);
+            std::cout << "[GcodeDispatch.cpp] Command: " << gcode->command  << std::endl;
+        }
+        else {
+            char prefix = sub_string.at(i);
+            std::cout << "[GcodeDispatch.cpp] Argument recieved..." << std::endl;
+            sub_string.erase(i, 1);
+            gcode->args.insert(std::pair<char, float>(prefix, std::stof(sub_string, &i))); 
+            for(const auto& [key, value] : gcode->args) {
+                std::cout << "[GcodeDispatch.cpp] Arg Command: " << key << std::endl;
+                std::cout << "[GcodeDispatch.cpp] Arg Modifier: " << value << std::endl;
+            }
+        }
+    } while(std::string::npos != n);
+
+    std::cout << "[GcodeDispatch.cpp] Gcode created..." << std::endl;
+    std::cout << "[GcodeDispatch.cpp] Command: ";
+    if(gcode->has_g) { std::cout << "G" << gcode->command << std::endl; }
+    if(gcode->has_m) { std::cout << "M" << gcode->command << std::endl; }
+    for(const auto& [key, value] : gcode->args) {
+        std::cout << "[GcodeDispatch.cpp] Argument: " << key << value << std::endl;
+    }
+    
+    Core::GcodeReceivedEvent on_gcode_received_event;
+    Core::Kernel::Get().CallEvent(on_gcode_received_event, gcode);
 }
