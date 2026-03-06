@@ -24,7 +24,6 @@ namespace Core {
         virtual void OnModuleLoaded() override;
 
         void OnConsoleLineReceived(std::shared_ptr<void> argument) override;
-
     };
 
 } // namespace Core

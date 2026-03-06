@@ -26,7 +26,6 @@ namespace Core {
         void OnIdle(std::shared_ptr<void> argument) override;
         void OnGcodeReceived(std::shared_ptr<void> argument) override;
         void OnSecondTick(std::shared_ptr<void> argument) override;
-
     };
 
 } // namespace Core

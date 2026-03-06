@@ -25,7 +25,6 @@ namespace Core {
 
         void OnIdle(std::shared_ptr<void> argument) override;
         void OnHalt(std::shared_ptr<void> argument) override;
-
     };
 
 } // namespace Core

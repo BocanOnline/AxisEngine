@@ -52,8 +52,6 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
         std::cout << "[GcodeDispatch.cpp] SerialMessage is not a supported GcodeCommand..." << std::endl;
         return;
     }
-        
-    std::cout << "[GcodeDispatch.cpp] GcodeCommand received..." << std::endl;
 
     std::string raw_message = message->message;
     std::shared_ptr<Core::Gcode> gcode = std::make_shared<Core::Gcode>();
@@ -64,19 +62,13 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
     // find and remove comments    
     n = raw_message.find(';');
     if(std::string::npos != n) {
-
         raw_message.erase(n, (raw_message.length() - n));
-        std::cout << "[GcodeDispatch.cpp] Comments removed..." << std::endl;
-        std::cout << "[GcodeDispatch.cpp] " << raw_message << std::endl;
     }
 
     // remove trailing white space
     while(raw_message.back() == ' ') {
-
         raw_message.pop_back();
     }
-    std::cout << "[GcodeDispatch.cpp] Trailing white space removed..." << std::endl;
-    std::cout << "[GcodeDispatch.cpp] " << raw_message << std::endl;
 
     // parse commands and arguments
     do {
@@ -94,27 +86,18 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
         
         if(sub_string.at(i) == 'G') {
             gcode->has_g = true;
-            std::cout << "[GcodeDispatch.cpp] G-Code received..." << std::endl;
             sub_string.erase(i, 1);
             gcode->command = std::stoi(sub_string, &i);
-            std::cout << "[GcodeDispatch.cpp] Command: " << gcode->command  << std::endl;
         }
         else if(sub_string.at(i) == 'M') {
             gcode->has_m = true;
-            std::cout << "[GcodeDispatch.cpp] M-Code received..." << std::endl;
             sub_string.erase(i, 1);
             gcode->command = std::stoi(sub_string, &i);
-            std::cout << "[GcodeDispatch.cpp] Command: " << gcode->command  << std::endl;
         }
         else {
             char prefix = sub_string.at(i);
-            std::cout << "[GcodeDispatch.cpp] Argument recieved..." << std::endl;
             sub_string.erase(i, 1);
             gcode->args.insert(std::pair<char, float>(prefix, std::stof(sub_string, &i))); 
-            for(const auto& [key, value] : gcode->args) {
-                std::cout << "[GcodeDispatch.cpp] Arg Command: " << key << std::endl;
-                std::cout << "[GcodeDispatch.cpp] Arg Modifier: " << value << std::endl;
-            }
         }
     } while(std::string::npos != n);
 
@@ -129,3 +112,7 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
     Core::GcodeReceivedEvent on_gcode_received_event;
     Core::Kernel::Get().CallEvent(on_gcode_received_event, gcode);
 }
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] add error checking to g-code parsing code
+////////////////////////////////////////////////////////////////////////////////

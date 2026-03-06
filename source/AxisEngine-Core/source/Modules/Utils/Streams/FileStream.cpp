@@ -36,12 +36,10 @@ std::string Core::FileStream::GetLine() {
     if(file.is_open()) {
 
         std::getline(file, line);
-   
     } else {
 
         std::cerr << "[FileStream.cpp] Unable to open file..." << line << std::endl;
     }
-
     return line;
 }
 

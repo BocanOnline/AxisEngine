@@ -24,13 +24,6 @@ char Core::ConsoleStream::GetChar() {
 
 std::string Core::ConsoleStream::GetLine() {
 
-    // TODO
-    // this is currently a blocking function
-    // for the start of the program it will likely run fine, but when the end
-    // of a gcode file is reached, this function will likely block all other
-    // modules from executing. Likely solution is creating a stream thread to
-    // watch for this input without blocking the remaining modules
-
     std::string line;
 
     std::getline(std::cin, line);
@@ -46,4 +39,7 @@ bool Core::ConsoleStream::PutLine() {
 
     return false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] implement threads to prevent GetLine from blocking execution
+////////////////////////////////////////////////////////////////////////////////

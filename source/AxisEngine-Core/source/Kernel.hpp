@@ -64,9 +64,12 @@ namespace Core {
 
         std::unordered_map<std::string, 
                  std::vector<std::function<void(std::shared_ptr<void>)>>> m_CallbackTable;
-        
-        // TODO: add config data/methods
-
     };
 
 } // namespace Core
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] add config file input and parsing (Configurator Class?)
+// [ ] add multi-threading (goal: Kernel controls threads for application)
+// [ ] add sophisticated logging (goal: Kernel controls logging streams)
+////////////////////////////////////////////////////////////////////////////////

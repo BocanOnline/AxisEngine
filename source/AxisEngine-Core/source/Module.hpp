@@ -36,9 +36,11 @@ namespace Core {
         virtual void OnSetPublicData(std::shared_ptr<void> argument) {}
         virtual void OnHalt(std::shared_ptr<void> argument) {}
         virtual void OnEnable(std::shared_ptr<void> argument) {}
-        
-        // TODO: look into std::any instead of void pointers for arg passing
-
     };
 
 } // namespace Core
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] look into std::any instead of void pointers for arg passing
+// [ ] single event method with event class passed as argument (future refactor)
+////////////////////////////////////////////////////////////////////////////////

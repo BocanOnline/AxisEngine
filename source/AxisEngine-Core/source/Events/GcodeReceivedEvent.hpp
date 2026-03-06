@@ -7,6 +7,8 @@
 // app: AxisEngine-Core
 // file: GcodeReceivedEvent.hpp
 ////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
 #include <string>
 
 #include "../Event.hpp"

@@ -29,9 +29,6 @@
 
 Core::SerialConsole::SerialConsole() {
 
-    // TODO
-    // case change for troubleshooting
-    // this will eventually replaced with a kernel config file load
     int stream_config = 2;
 
     switch(stream_config) {
@@ -83,17 +80,14 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
 
         m_HaltFlag = true;
     }
-
     if(this->HasChar('?')) {
 
         m_QueryFlag = true;
     }
-
     if(this->HasChar('Q') || this->HasChar('q')) {
 
         m_ExitFlag = true;
     }
-
     if(this->HasLine()) {
 
         std::shared_ptr<Core::SerialMessage> message = std::make_shared<Core::SerialMessage>();
@@ -126,7 +120,6 @@ bool Core::SerialConsole::HasLine() {
         
         return false;
     }
-
     return true;
 }
 
@@ -136,6 +129,11 @@ bool Core::SerialConsole::HasChar(char letter) {
         
         return true;
     }
-
     return false;
 }
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] add configurable stream and file address
+// [ ] flesh out Streams and Child Class methods
+// [ ] implement NetworkStream
+////////////////////////////////////////////////////////////////////////////////
