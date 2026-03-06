@@ -29,12 +29,15 @@ namespace Core {
         void OnMainLoop(std::shared_ptr<void> argument) override;
         void OnIdle(std::shared_ptr<void> argument) override;
 
+        bool ReceivedExitCommand() { return m_ExitFlag; }
+
     private:
         std::shared_ptr<Core::Stream> m_Stream;
         std::string m_LineBuffer;
 
         bool m_HaltFlag = false;
         bool m_QueryFlag = false;
+        bool m_ExitFlag = false;
 
     private:
         bool HasLine();

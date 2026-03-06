@@ -57,11 +57,14 @@ Core::Kernel::~Kernel() {
 
 void Core::Kernel::Run() {
 
-    MainLoopEvent on_main_loop_event; 
-    Core::Kernel::Get().CallEvent(on_main_loop_event, nullptr);
+    while(!serialconsole->ReceivedExitCommand()) {
 
-    IdleEvent on_idle_event;
-    Core::Kernel::Get().CallEvent(on_idle_event, nullptr);
+        MainLoopEvent on_main_loop_event; 
+        Core::Kernel::Get().CallEvent(on_main_loop_event, nullptr);
+
+        IdleEvent on_idle_event;
+        Core::Kernel::Get().CallEvent(on_idle_event, nullptr);
+    }
 }
 
 void Core::Kernel::AddModule(std::shared_ptr<Module> module) {

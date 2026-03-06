@@ -15,6 +15,7 @@
 
 #include "../Events/ConsoleLineReceivedEvent.hpp"
 #include "../Events/MainLoopEvent.hpp"
+#include "../Events/HaltEvent.hpp"
 #include "../Events/IdleEvent.hpp"
 
 #include "Utils/Structs/SerialMessage.hpp"
@@ -78,7 +79,7 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
 
     m_LineBuffer = m_Stream->GetLine();
 
-    if(this->HasChar('\x18')) {
+    if(this->HasChar('\x1B')) {
 
         m_HaltFlag = true;
     }
@@ -86,6 +87,11 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
     if(this->HasChar('?')) {
 
         m_QueryFlag = true;
+    }
+
+    if(this->HasChar('Q') || this->HasChar('q')) {
+
+        m_ExitFlag = true;
     }
 
     if(this->HasLine()) {
@@ -103,6 +109,12 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
 void Core::SerialConsole::OnIdle(std::shared_ptr<void> argument) {
 
     std::cout << "[SerialConsole.cpp] SerialConsole called by IdleEvent..." << std::endl;
+
+    if(m_HaltFlag) {
+
+        Core::HaltEvent on_halt_event;
+        Core::Kernel::Get().CallEvent(on_halt_event, argument);
+    }
 }
 
 bool Core::SerialConsole::HasLine() {
@@ -122,8 +134,8 @@ bool Core::SerialConsole::HasLine() {
 
 bool Core::SerialConsole::HasChar(char letter) {
   
-    if(m_LineBuffer.find(letter)) {
-
+    if(m_LineBuffer.find(letter) != std::string::npos) {
+        
         return true;
     }
 
