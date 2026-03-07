@@ -18,7 +18,7 @@
 #include "../Events/HaltEvent.hpp"
 #include "../Events/IdleEvent.hpp"
 
-#include "Utils/Structs/SerialMessage.hpp"
+#include "Utils/Messages/SerialMessage.hpp"
 
 #include "Utils/Streams/ConsoleStream.hpp"
 #include "Utils/Streams/FileStream.hpp"

@@ -15,8 +15,8 @@
 #include "../Events/ConsoleLineReceivedEvent.hpp"
 #include "../Events/GcodeReceivedEvent.hpp"
 
-#include "Utils/Structs/SerialMessage.hpp"
-#include "Utils/Structs/Gcode.hpp"
+#include "Utils/Messages/SerialMessage.hpp"
+#include "Utils/Messages/Gcode.hpp"
 
 #include "GcodeDispatch.hpp"
 

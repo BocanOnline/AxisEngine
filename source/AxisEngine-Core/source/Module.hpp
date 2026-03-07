@@ -43,4 +43,5 @@ namespace Core {
 // TODO
 // [ ] look into std::any instead of void pointers for arg passing
 // [ ] single event method with event class passed as argument (future refactor)
+// [ ] add module name function as string for debugging purposes
 ////////////////////////////////////////////////////////////////////////////////

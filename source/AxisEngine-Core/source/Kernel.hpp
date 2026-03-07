@@ -29,9 +29,12 @@ namespace Core {
 
     class SerialConsole;
     class GcodeDispatch;
-    class SlowTicker;
     class Robot;
+    class Planner;
     class Conveyer;
+
+    class SlowTicker;
+    class StepTicker;
 
     class Kernel {
 
@@ -48,11 +51,14 @@ namespace Core {
         void CallEvent(Event& event, std::shared_ptr<void> argument);
 
     public:
-        std::shared_ptr<SerialConsole>          serialconsole;
-        std::shared_ptr<GcodeDispatch>          gcodedispatch;
-        std::shared_ptr<SlowTicker>             slowticker;
-        std::shared_ptr<Robot>                  robot;
-        std::shared_ptr<Conveyer>               conveyer;
+        std::shared_ptr<SerialConsole>          m_SerialConsole;
+        std::shared_ptr<GcodeDispatch>          m_GcodeDispatch;
+        std::shared_ptr<Robot>                  m_Robot;
+        std::shared_ptr<Planner>                m_Planner;
+        std::shared_ptr<Conveyer>               m_Conveyer;
+        
+        std::shared_ptr<SlowTicker>             m_SlowTicker;
+        std::shared_ptr<StepTicker>             m_StepTicker;
 
     private:
          Kernel(); 

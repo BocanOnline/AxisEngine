@@ -5,7 +5,7 @@
 // license: The Unlicense
 // project: AxisEngine
 // app: AxisEngine-Core
-// file: Planner.hpp
+// file: StepTicker.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -15,16 +15,15 @@
 
 namespace Core {
 
-    class Planner : public Module {
+    class StepTicker : public Module {
 
     public:
-        Planner();
-        virtual ~Planner() override;
+        StepTicker();
+        virtual ~StepTicker() override;
         
         virtual void OnModuleLoaded() override;
 
         void OnIdle(std::shared_ptr<void> argument) override;
-        void OnSecondTick(std::shared_ptr<void> argument) override;
     };
 
 } // namespace Core

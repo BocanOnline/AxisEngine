@@ -20,9 +20,11 @@
 #include "Module.hpp"
 #include "Modules/SerialConsole.hpp"
 #include "Modules/GcodeDispatch.hpp"
-#include "Modules/SlowTicker.hpp"
 #include "Modules/Robot.hpp"
+#include "Modules/Planner.hpp"
 #include "Modules/Conveyer.hpp"
+#include "Modules/SlowTicker.hpp"
+#include "Modules/StepTicker.hpp"
 
 Core::Kernel Core::Kernel::s_Instance;
 
@@ -31,17 +33,21 @@ Core::Kernel::Kernel() {
     std::cout << "[Kernel.cpp] Kernel created..." << std::endl; 
     std::cout << "[Kernel.cpp] Kernel constructor start..." << std::endl;
    
-    serialconsole = std::make_shared<SerialConsole>();
-    gcodedispatch = std::make_shared<GcodeDispatch>();
-    slowticker    = std::make_shared<SlowTicker>();
-    robot         = std::make_shared<Robot>();
-    conveyer      = std::make_shared<Conveyer>();
+    m_SerialConsole = std::make_shared<SerialConsole>();
+    m_GcodeDispatch = std::make_shared<GcodeDispatch>();
+    m_Robot         = std::make_shared<Robot>();
+    m_Planner       = std::make_shared<Planner>();
+    m_Conveyer      = std::make_shared<Conveyer>();
+    m_SlowTicker    = std::make_shared<SlowTicker>();
+    m_StepTicker    = std::make_shared<StepTicker>();
    
-    Core::Kernel::AddModule(serialconsole);
-    Core::Kernel::AddModule(gcodedispatch);
-    Core::Kernel::AddModule(slowticker);
-    Core::Kernel::AddModule(robot);
-    Core::Kernel::AddModule(conveyer);
+    Core::Kernel::AddModule(m_SerialConsole);
+    Core::Kernel::AddModule(m_GcodeDispatch);
+    Core::Kernel::AddModule(m_Robot);
+    Core::Kernel::AddModule(m_Planner);
+    Core::Kernel::AddModule(m_Conveyer);
+    Core::Kernel::AddModule(m_SlowTicker);
+    Core::Kernel::AddModule(m_StepTicker);
     std::cout << "[Kernel.cpp] Kernel constructor end..." << std::endl; 
 
 //    after these below function calls are implemented, I may move them to
@@ -59,7 +65,7 @@ Core::Kernel::~Kernel() {
 
 void Core::Kernel::Run() {
 
-    while(!serialconsole->ReceivedExitCommand()) {
+    while(!m_SerialConsole->ReceivedExitCommand()) {
 
         MainLoopEvent on_main_loop_event; 
         Core::Kernel::Get().CallEvent(on_main_loop_event, nullptr);
