@@ -1,0 +1,32 @@
+////////////////////////////////////////////////////////////////////////////////
+// organization: Bocan Online
+// author: Matthew Buchanan
+//
+// license: The Unlicense
+// project: AxisEngine
+// app: AxisEngine-Core
+// file: Worker.hpp
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+namespace Core {
+
+    class Worker {
+
+    public:
+        Worker() {}
+        virtual ~Worker() = default;
+        
+        virtual void RegisterForTask() = 0;
+        virtual void Run() = 0;
+        virtual void UnregisterForTask() = 0;
+
+    };
+
+} // namespace Core
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ] this is the interface for asynchronous execution
+// [ ] 
+// [ ] 
+////////////////////////////////////////////////////////////////////////////////

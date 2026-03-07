@@ -21,8 +21,6 @@
 #include "Modules/SerialConsole.hpp"
 #include "Modules/GcodeDispatch.hpp"
 #include "Modules/Robot.hpp"
-#include "Modules/Planner.hpp"
-#include "Modules/Conveyer.hpp"
 #include "Modules/SlowTicker.hpp"
 #include "Modules/StepTicker.hpp"
 
@@ -36,16 +34,12 @@ Core::Kernel::Kernel() {
     m_SerialConsole = std::make_shared<SerialConsole>();
     m_GcodeDispatch = std::make_shared<GcodeDispatch>();
     m_Robot         = std::make_shared<Robot>();
-    m_Planner       = std::make_shared<Planner>();
-    m_Conveyer      = std::make_shared<Conveyer>();
     m_SlowTicker    = std::make_shared<SlowTicker>();
     m_StepTicker    = std::make_shared<StepTicker>();
    
     Core::Kernel::AddModule(m_SerialConsole);
     Core::Kernel::AddModule(m_GcodeDispatch);
     Core::Kernel::AddModule(m_Robot);
-    Core::Kernel::AddModule(m_Planner);
-    Core::Kernel::AddModule(m_Conveyer);
     Core::Kernel::AddModule(m_SlowTicker);
     Core::Kernel::AddModule(m_StepTicker);
     std::cout << "[Kernel.cpp] Kernel constructor end..." << std::endl; 

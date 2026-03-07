@@ -9,22 +9,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include <memory>
-
-#include "../Module.hpp"
-
 namespace Core {
 
-    class Planner : public Module {
+    class Planner {
 
     public:
         Planner();
-        virtual ~Planner() override;
+        ~Planner();
         
-        virtual void OnModuleLoaded() override;
-
-        void OnIdle(std::shared_ptr<void> argument) override;
-        void OnSecondTick(std::shared_ptr<void> argument) override;
     };
 
 } // namespace Core

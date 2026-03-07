@@ -5,7 +5,7 @@
 // license: The Unlicense
 // project: AxisEngine
 // app: AxisEngine-Core
-// file: Conveyer.hpp
+// file: SimpleShell.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -15,16 +15,15 @@
 
 namespace Core {
 
-    class Conveyer : public Module {
+    class SimpleShell : public Module {
 
     public:
-        Conveyer();
-        virtual ~Conveyer() override;
+        SimpleShell();
+        virtual ~SimpleShell() override;
         
         virtual void OnModuleLoaded() override;
 
-        void OnIdle(std::shared_ptr<void> argument) override;
-        void OnHalt(std::shared_ptr<void> argument) override;
+        void OnConsoleLineReceived(std::shared_ptr<void> argument) override;
     };
 
 } // namespace Core

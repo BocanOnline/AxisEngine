@@ -41,3 +41,7 @@ void Core::SlowTicker::OnIdle(std::shared_ptr<void> argument) {
 
     std::cout << "[SlowTicker.cpp] SlowTicker called by IdleEvent..." << std::endl; 
 }
+
+void Core::SlowTicker::RegisterForTask() {}
+void Core::SlowTicker::Run() {}
+void Core::SlowTicker::UnregisterForTask() {}

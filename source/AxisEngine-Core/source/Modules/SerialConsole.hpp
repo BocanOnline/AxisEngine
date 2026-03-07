@@ -12,22 +12,28 @@
 #include <memory>
 
 #include "../Module.hpp"
+#include "../Worker.hpp"
 
 #include "Utils/Streams/Stream.hpp"
 
 
 namespace Core {
 
-    class SerialConsole : public Module {
+    class SerialConsole : public Module, Worker {
 
     public:
         SerialConsole();
         virtual ~SerialConsole() override;
-        
-        virtual void OnModuleLoaded() override;
-
-        void OnMainLoop(std::shared_ptr<void> argument) override;
-        void OnIdle(std::shared_ptr<void> argument) override;
+       
+        // Module
+        virtual void OnModuleLoaded() override;     
+        virtual void OnMainLoop(std::shared_ptr<void> argument) override;
+        virtual void OnIdle(std::shared_ptr<void> argument) override;
+       
+        // Worker
+        virtual void RegisterForTask() override;
+        virtual void Run() override;
+        virtual void UnregisterForTask() override;
 
         bool ReceivedExitCommand() { return m_ExitFlag; }
 

@@ -16,11 +16,11 @@
 
 namespace AxisEngine {
 
-    void AddModule(std::shared_ptr<Core::Module> module) { // NOLINT
+    void AddModule(std::shared_ptr<Core::Module> module) {
             
         return Core::Kernel::Get().AddModule(module);
     }
-    void CallEvent(Core::Event& event, std::shared_ptr<void> argument) { // NOLINT
+    void CallEvent(Core::Event& event, std::shared_ptr<void> argument) {
 
         return Core::Kernel::Get().CallEvent(event, argument);
     }
@@ -30,9 +30,7 @@ namespace AxisEngine {
     }
 }
 
-#include <iostream>
-
-int main(int argc, char** argv) { // NOLINT
+int main(int argc, char** argv) {
 
     std::cout << "[AxisEngine.hpp] Start of main function..." << std::endl;
     

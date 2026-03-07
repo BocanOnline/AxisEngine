@@ -41,3 +41,7 @@ void Core::StepTicker::OnIdle(std::shared_ptr<void> argument) {
 
     std::cout << "[StepTicker.cpp] StepTicker called by IdleEvent..." << std::endl; 
 }
+
+void Core::StepTicker::RegisterForTask() {}
+void Core::StepTicker::Run() {}
+void Core::StepTicker::UnregisterForTask() {}

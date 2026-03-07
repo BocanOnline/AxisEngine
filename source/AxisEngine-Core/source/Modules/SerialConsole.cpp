@@ -34,13 +34,13 @@ Core::SerialConsole::SerialConsole() {
     switch(stream_config) {
         case 1:
             m_Stream = std::make_shared<Core::ConsoleStream>();
-            return;
+            break;
         case 2:
             m_Stream = std::make_shared<Core::FileStream>();
-            return;
+            break;
         case 3:
             m_Stream = std::make_shared<Core::NetworkStream>();
-            return;
+            break;
         default:
     }
 
@@ -111,6 +111,10 @@ void Core::SerialConsole::OnIdle(std::shared_ptr<void> argument) {
         Core::Kernel::Get().CallEvent(on_halt_event, argument);
     }
 }
+
+void Core::SerialConsole::RegisterForTask() {}
+void Core::SerialConsole::Run() {}
+void Core::SerialConsole::UnregisterForTask() {}
 
 bool Core::SerialConsole::HasLine() {
 
