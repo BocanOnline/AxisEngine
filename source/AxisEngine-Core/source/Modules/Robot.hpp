@@ -14,7 +14,10 @@
 
 #include "../Module.hpp"
 
-#include "Utils/Robot/RobotTypes.hpp"
+#include "Utils/MotionControl/Types.hpp"
+
+class Planner;
+class Conveyer;
 
 class Solution;
 class StepperMotor;
@@ -33,6 +36,7 @@ namespace Core {
         virtual void OnGcodeReceived(std::shared_ptr<void> argument) override;
         virtual void OnSecondTick(std::shared_ptr<void> argument) override;
 
+    public:
         struct {
             bool m_InchMode: 1;
             bool m_AbsoluteMode: 1;
@@ -53,6 +57,9 @@ namespace Core {
         };
 
     private:
+        std::shared_ptr<Conveyer>  m_Conveyer;
+        std::shared_ptr<Planner>   m_Planner;
+        
         std::shared_ptr<Solution>  m_MachineSolution;
         std::vector<StepperMotor>  m_Actuators;
        

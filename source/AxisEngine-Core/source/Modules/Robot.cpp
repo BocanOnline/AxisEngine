@@ -17,16 +17,21 @@
 #include "../Events/GcodeReceivedEvent.hpp"
 #include "../Events/SecondTickEvent.hpp"
 
-#include "Modules/Utils/Robot/RobotTypes.hpp"
 #include "Utils/Hardware/StepperMotor.hpp"
 #include "Utils/Hardware/Pin.hpp"
 
-#include "Utils/Robot/Solutions/CartesianSolution.hpp"
+#include "Utils/MotionControl/Solutions/CartesianSolution.hpp"
+#include "Utils/MotionControl/Conveyer.hpp"
+#include "Utils/MotionControl/Planner.hpp"
+#include "Utils/MotionControl/Types.hpp"
 
 #include "Robot.hpp"
 
 
 Core::Robot::Robot() {
+    
+    m_Conveyer = std::make_shared<Conveyer>();
+    m_Planner  = std::make_shared<Planner>();
 
     std::cout << "[Robot.cpp] Robot created..." << std::endl;
 }
@@ -41,6 +46,7 @@ void Core::Robot::OnModuleLoaded() {
     Core::IdleEvent on_idle_event;
     auto on_idle_function = [this](std::shared_ptr<void> argument)
                                 { this->Core::Robot::OnIdle(argument); };
+
     this->RegisterForEvent(on_idle_event, on_idle_function);
 
     std::cout << "[Robot.cpp] Robot registered for IdleEvent..." << std::endl;
@@ -48,6 +54,7 @@ void Core::Robot::OnModuleLoaded() {
     Core::GcodeReceivedEvent on_gcode_received_event;
     auto on_gcode_received_function = [this](std::shared_ptr<void> argument)
                                 { this->Core::Robot::OnGcodeReceived(argument); };
+   
     this->RegisterForEvent(on_gcode_received_event, on_gcode_received_function);
 
     std::cout << "[Robot.cpp] Robot registered for GcodeReceivedEvent..." << std::endl;
@@ -55,6 +62,7 @@ void Core::Robot::OnModuleLoaded() {
     Core::SecondTickEvent on_second_tick_event;
     auto on_second_tick_function = [this](std::shared_ptr<void> argument)
                                 { this->Core::Robot::OnSecondTick(argument); };
+   
     this->RegisterForEvent(on_second_tick_event, on_second_tick_function);
     
     std::cout << "[Robot.cpp] Robot registered for SecondTickEvent..." << std::endl;

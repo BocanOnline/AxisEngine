@@ -10,7 +10,7 @@
 
 #include "CartesianSolution.hpp"
 
-#include "../RobotTypes.hpp"
+#include "../Types.hpp"
 
 Core::CartesianSolution::CartesianSolution() {}
 
