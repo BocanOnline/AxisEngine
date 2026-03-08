@@ -16,13 +16,13 @@
 
 #include "Utils/MotionControl/Types.hpp"
 
-class Planner;
-class Conveyer;
-
-class Solution;
-class StepperMotor;
-
 namespace Core {
+
+    class StepperMotor;
+    class Gcode;
+    class Solution;
+    class Conveyer;
+    class Planner;
 
     class Robot : public Module {
 
@@ -55,6 +55,9 @@ namespace Core {
             int  m_PlaneAxis1: 2;
             int  m_PlaneAxis2: 2;
         };
+
+    private:
+        void ProcessMove(std::shared_ptr<Core::Gcode>, Core::MotionMode);
 
     private:
         std::shared_ptr<Conveyer>  m_Conveyer;

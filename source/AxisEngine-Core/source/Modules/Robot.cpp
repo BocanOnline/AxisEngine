@@ -20,6 +20,8 @@
 #include "Utils/Hardware/StepperMotor.hpp"
 #include "Utils/Hardware/Pin.hpp"
 
+#include "Utils/Messages/Gcode.hpp"
+
 #include "Utils/MotionControl/Solutions/CartesianSolution.hpp"
 #include "Utils/MotionControl/Conveyer.hpp"
 #include "Utils/MotionControl/Planner.hpp"
@@ -97,7 +99,7 @@ void Core::Robot::OnModuleLoaded() {
             pins.at(j).Set(j);
         }
        
-        StepperMotor sm(pins.at(0), pins.at(1), pins.at(2));
+        Core::StepperMotor sm(pins.at(0), pins.at(1), pins.at(2));
         m_Actuators.push_back(sm);
 
         m_Actuators.at(i).ChangeStepsPerMillimeter(100.0F);
@@ -118,10 +120,9 @@ void Core::Robot::OnModuleLoaded() {
 
     // set endstop positions
     m_SoftEndstopEnabled = false;
-    m_SoftEndstopHalt = true;
-
-    m_SoftEndstopMin = { 0.0F, 0.0F, 0.0F };
-    m_SoftEndstopMax = { 200.0F, 200.0F, 50.0F };
+    m_SoftEndstopHalt    = true;
+    m_SoftEndstopMin     = { 0.0F, 0.0F, 0.0F };
+    m_SoftEndstopMax     = { 200.0F, 200.0F, 50.0F };
     
     std::cout << "[Robot.cpp] Endstop Positions initialized..." << std::endl;
 }
@@ -134,13 +135,56 @@ void Core::Robot::OnIdle(std::shared_ptr<void> argument) {
 void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
 
     std::cout << "[Robot.cpp] Robot called by GcodeReceivedEvent..." << std::endl; 
+    
+    std::shared_ptr<Core::Gcode> gcode = std::static_pointer_cast<Core::Gcode>(argument);
+
+    Core::MotionMode motion_mode;
+    
+    if(gcode->has_g) {
+        switch(gcode->command) {
+            case 0:
+                motion_mode = Core::MotionMode::Seek; 
+                std::cout << "[Robot.cpp] G0 received..." << std::endl; 
+                break;
+            case 1:
+                motion_mode = Core::MotionMode::Linear;
+                std::cout << "[Robot.cpp] G1 received..." << std::endl; 
+                break;
+            case 2:
+                motion_mode = Core::MotionMode::ClockwiseArc;
+                std::cout << "[Robot.cpp] G2 received..." << std::endl; 
+                break;
+            case 3:
+                motion_mode = Core::MotionMode::CounterArc;
+                std::cout << "[Robot.cpp] G3 received..." << std::endl; 
+                break;
+            default:
+                motion_mode = Core::MotionMode::None;
+                std::cout << "[Robot.cpp] G-Code is not a motion command..." << std::endl; 
+                break;
+        }
+    }
+    if(motion_mode != Core::MotionMode::None) {
+        ProcessMove(gcode, motion_mode);
+    } else {  
+        m_IsG123 = false;
+    }
+
+
+
 }
 
 void Core::Robot::OnSecondTick(std::shared_ptr<void> argument) {
 
     std::cout << "[Robot.cpp] Robot called by SecondTickEvent..." << std::endl;
 }
+
+void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMode motion_mode) {
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // TODO
 // [ ] add loadtime and runtime configuration capability
+// [ ] add other G and M codes required by standard
 ////////////////////////////////////////////////////////////////////////////////

@@ -14,10 +14,8 @@
 
 Core::Conveyer::Conveyer() {
 
-    std::cout << "[Conveyer.cpp] Conveyer created..." << std::endl;
 }
 
 Core::Conveyer::~Conveyer() {
 
-    std::cout << "[Conveyer.cpp] Conveyer destroyed..." << std::endl;
 }

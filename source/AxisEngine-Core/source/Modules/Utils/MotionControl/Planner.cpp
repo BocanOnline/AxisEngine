@@ -14,11 +14,9 @@
 
 Core::Planner::Planner() {
 
-    std::cout << "[Planner.cpp] Planner created..." << std::endl;
 }
 
 Core::Planner::~Planner() {
 
-    std::cout << "[Planner.cpp] Planner destroyed..." << std::endl;
 }
     
