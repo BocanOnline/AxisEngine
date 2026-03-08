@@ -10,7 +10,6 @@
 #include <iostream>
 #include <memory>
 
-#include "../Kernel.hpp"
 
 #include "../Events/ConsoleLineReceivedEvent.hpp"
 
