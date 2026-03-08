@@ -10,6 +10,7 @@
 #include <iostream>
 #include <memory>
 #include <array>
+#include <vector>
 
 #include "../Kernel.hpp"
 
@@ -34,6 +35,8 @@ Core::Robot::Robot() {
     
     m_Conveyer = std::make_shared<Conveyer>();
     m_Planner  = std::make_shared<Planner>();
+
+    m_NumberOfActuators = 0;
 
     std::cout << "[Robot.cpp] Robot created..." << std::endl;
 }
@@ -92,7 +95,7 @@ void Core::Robot::OnModuleLoaded() {
     std::cout << "[Robot.cpp] Configuration set..." << std::endl;
 
     // create StepperMotors
-    for(int i = 0; i < c_Max_Actuators; i++) {
+    for(int i = 0; i < c_MaxActuators; i++) {
 
         std::array<Core::Pin, 3> pins ;
         for(int j = 0; j < 3; j++) {
@@ -105,6 +108,8 @@ void Core::Robot::OnModuleLoaded() {
         m_Actuators.at(i).ChangeStepsPerMillimeter(100.0F);
         m_Actuators.at(i).SetMaxRate(30000.0F / 60.0);
         m_Actuators.at(i).SetAcceleration(100.0F);
+
+        m_NumberOfActuators++;
     }
     
     std::cout << "[Robot.cpp] StepperMotors initialized..." << std::endl;
@@ -112,7 +117,7 @@ void Core::Robot::OnModuleLoaded() {
     // set actuator positions to current cartesian position (X0, Y0, Z0) 
     m_MachinePosition = { 0.0F, 0.0F, 0.0F };
     m_MachineSolution->CartesianToActuator(m_MachinePosition, m_ActuatorPosition);
-    for(int i = 0; i < c_Max_Actuators; i++) {
+    for(int i = 0; i < c_MaxActuators; i++) {
         m_Actuators.at(i).ChangeLastMilestone(m_ActuatorPosition.at(i));
     }
     
@@ -141,7 +146,7 @@ void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
     Core::MotionMode motion_mode;
     
     if(gcode->has_g) {
-        switch(gcode->command) {
+        switch(gcode->get_ivalue('G')) {
             case 0:
                 motion_mode = Core::MotionMode::Seek; 
                 std::cout << "[Robot.cpp] G0 received..." << std::endl; 
@@ -170,8 +175,7 @@ void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
         m_IsG123 = false;
     }
 
-
-
+    m_NextCommandIsMCS = false;
 }
 
 void Core::Robot::OnSecondTick(std::shared_ptr<void> argument) {
@@ -180,11 +184,112 @@ void Core::Robot::OnSecondTick(std::shared_ptr<void> argument) {
 }
 
 void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMode motion_mode) {
+    
+    // extract parameters from gcode (X Y Z E A B C)
+    // NOTE: this is how Smoothie did it, however we compare to gcode directly below
+
+    // calculate target position in machine coordinates (except compensation transform) X Y Z
+    Core::CartesianCoordinates target_position;
+
+    if(!m_NextCommandIsMCS) {
+
+        // work coordinate system
+        if(m_AbsoluteMode) {
+        
+            // absolute mode; need to add wcs and tcs offsets 
+            if(gcode->has_x) {
+                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X');
+            }
+            if(gcode->has_y) {
+                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y');
+            }
+            if(gcode->has_z) {
+                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z');
+            }
+        } else { 
+
+            // relative mode 
+            if(gcode->has_x) {
+                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            }
+            if(gcode->has_y) {
+                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            }
+            if(gcode->has_z) {
+                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            }
+        }
+    } else {
+
+        // machine coordinate system
+        if(gcode->has_x) {
+            target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X');
+        }
+        if(gcode->has_y) {
+            target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y');
+        }
+        if(gcode->has_z) {
+            target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z');
+        }
+    }
+
+    // calculate target in machine coordinates (except compensation transform) E A B C
+    // TODO
+
+    // process changes to SeekRate and FeedRate with F argument
+    if(gcode->has_f) {
+        if(motion_mode == Core::MotionMode::Seek) {
+            m_SeekRate = gcode->get_fvalue('F');
+        } else {
+            m_FeedRate = gcode->get_fvalue('F');
+        }
+    }
+
+    // call append_line or compute_line to process motion
+    bool moved = false;
+    switch(motion_mode) {
+        case Core::MotionMode::Seek:
+            moved = AppendLine(gcode, target_position, m_SeekRate / m_SecondsPerMinute);
+            break;
+        case Core::MotionMode::Linear:
+            moved = AppendLine(gcode, target_position, m_FeedRate / m_SecondsPerMinute);
+            break;
+        case Core::MotionMode::ClockwiseArc:
+            moved = ComputeArc(gcode, target_position, motion_mode);
+            break;
+        case Core::MotionMode::CounterArc:
+            moved = ComputeArc(gcode, target_position, motion_mode);
+            break;
+        case Core::MotionMode::None:
+            break;
+        default:
+            break;
+    }
+
+    if(moved) {
+        m_MachinePosition = target_position;
+    }
 
 }
 
+bool Core::Robot::AppendLine(std::shared_ptr<Core::Gcode> gcode, Core::CartesianCoordinates target_position, float rate) {
+
+    return false;
+}
+
+bool Core::Robot::ComputeArc(std::shared_ptr<Core::Gcode> gcode, Core::CartesianCoordinates target_position, Core::MotionMode motion_mode) {
+
+    return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
+// Machine Coordinate System - physical machine axes
+// Work Coordinate System    - reference frame for workpiece
+// Tool Coordinate System    - reference frame for tool
+//
 // TODO
 // [ ] add loadtime and runtime configuration capability
 // [ ] add other G and M codes required by standard
+// [ ] implement work and tool coordinate systems and offsets
+// [ ] implement extruder parameters with E argument
 ////////////////////////////////////////////////////////////////////////////////

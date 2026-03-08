@@ -18,12 +18,14 @@ namespace Core {
         X = 0,
         Y = 1,
         Z = 2,
-        NumberOfPositionAxes = 3,
-        A = 3,
-        B = 4,
-        C = 5,
-        NumberOfRotationAxes = 3,
-        Total = 6
+        MaxPositionAxes = 3,
+        E = 3,
+        MaxExtruderAxes = 1,
+        A = 4,
+        B = 5,
+        C = 6,
+        MaxRotationAxes = 3,
+        Total = 7,
     };
 
     enum class MotionMode {
@@ -35,10 +37,10 @@ namespace Core {
         None = 4,
     };
 
-    const int c_Max_Actuators = 3;
+    const int c_MaxActuators = 3;
 
-    using CartesianCoordinates = std::array<float, static_cast<int>(Axis::NumberOfPositionAxes)>;
-    using ActuatorCoordinates = std::array<float, c_Max_Actuators>;
+    using CartesianCoordinates = std::array<float, static_cast<int>(Axis::MaxPositionAxes)>;
+    using ActuatorCoordinates = std::array<float, c_MaxActuators>;
 
 } // namespace Core
 ////////////////////////////////////////////////////////////////////////////////

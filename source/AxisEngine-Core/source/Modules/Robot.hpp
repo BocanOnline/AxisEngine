@@ -58,6 +58,8 @@ namespace Core {
 
     private:
         void ProcessMove(std::shared_ptr<Core::Gcode>, Core::MotionMode);
+        bool AppendLine(std::shared_ptr<Core::Gcode>, Core::CartesianCoordinates, float);
+        bool ComputeArc(std::shared_ptr<Core::Gcode>, Core::CartesianCoordinates, Core::MotionMode);
 
     private:
         std::shared_ptr<Conveyer>  m_Conveyer;
@@ -82,9 +84,9 @@ namespace Core {
             float m_GlobalMaxSpeed;
             int   m_NumberOfActuators;
             int   m_ArcCorrections;
-            std::array<float, static_cast<int>(Core::Axis::NumberOfPositionAxes)> m_AxisMaxSpeed;
-            std::array<float, static_cast<int>(Core::Axis::NumberOfPositionAxes)> m_SoftEndstopMin;
-            std::array<float, static_cast<int>(Core::Axis::NumberOfPositionAxes)> m_SoftEndstopMax;
+            std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_AxisMaxSpeed;
+            std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_SoftEndstopMin;
+            std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_SoftEndstopMax;
         };
 
     };

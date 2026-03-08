@@ -87,25 +87,70 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
         if(sub_string.at(i) == 'G') {
             gcode->has_g = true;
             sub_string.erase(i, 1);
-            gcode->command = std::stoi(sub_string, &i);
+            gcode->add_word('G', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'M') {
             gcode->has_m = true;
             sub_string.erase(i, 1);
-            gcode->command = std::stoi(sub_string, &i);
+            gcode->add_word('M', std::stof(sub_string, &i)); 
+        }
+        else if(sub_string.at(i) == 'X') {
+            gcode->has_x = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('X', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'Y') {
+            gcode->has_y = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('Y', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'Z') {
+            gcode->has_z = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('Z', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'E') {
+            gcode->has_e = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('E', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'A') {
+            gcode->has_z = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('A', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'B') {
+            gcode->has_b = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('B', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'C') {
+            gcode->has_c = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('C', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'F') {
+            gcode->has_f = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('F', std::stof(sub_string, &i));
+        }
+        else if(sub_string.at(i) == 'S') {
+            gcode->has_s = true;
+            sub_string.erase(i, 1);
+            gcode->add_word('S', std::stof(sub_string, &i));
         }
         else {
             char prefix = sub_string.at(i);
             sub_string.erase(i, 1);
-            gcode->args.insert(std::pair<char, float>(prefix, std::stof(sub_string, &i))); 
+            gcode->add_word(prefix, std::stof(sub_string, &i));
         }
     } while(std::string::npos != n);
 
     std::cout << "[GcodeDispatch.cpp] Gcode created..." << std::endl;
     std::cout << "[GcodeDispatch.cpp] Command: ";
-    if(gcode->has_g) { std::cout << "G" << gcode->command << std::endl; }
-    if(gcode->has_m) { std::cout << "M" << gcode->command << std::endl; }
-    for(const auto& [key, value] : gcode->args) {
+    if(gcode->has_g) { std::cout << "G" << gcode->get_ivalue('G') << std::endl; }
+    if(gcode->has_m) { std::cout << "M" << gcode->get_ivalue('M') << std::endl; }
+    for(const auto& [key, value] : gcode->word) {
         std::cout << "[GcodeDispatch.cpp] Argument: " << key << value << std::endl;
     }
     

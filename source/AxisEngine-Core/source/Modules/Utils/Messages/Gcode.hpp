@@ -10,17 +10,55 @@
 #pragma once
 
 #include <map>
+#include <cmath>
 
 namespace Core {
 
     struct Gcode {
+    
+    public:
+        float get_fvalue(char letter) {
+            
+            if(auto iterator = word.find(letter); iterator != word.end()) {
+                return iterator->second;
+            }
+            else {
+                return std::nan("");
+            } 
+        }
+        
+        int get_ivalue(char letter) {
+            
+            if(auto iterator = word.find(letter); iterator != word.end()) {
+                return static_cast<int>(iterator->second);
+            }
+            else {
+                return std::nan("");
+            } 
+        }
+        
+        void add_word(char letter, float number) {
+            
+            word.insert(std::pair<char, float>(letter, number));
+        }
 
-        bool has_g = 0;
-        bool has_m = 0;
+    public:
+        struct {
+            bool has_g: 1 = 0;
+            bool has_m: 1 = 0;
+            bool has_x: 1 = 0;
+            bool has_y: 1 = 0;
+            bool has_z: 1 = 0;
+            bool has_e: 1 = 0;
+            bool has_a: 1 = 0;
+            bool has_b: 1 = 0;
+            bool has_c: 1 = 0;
+            bool has_f: 1 = 0;
+            bool has_s: 1 = 0;
+        };
 
-        int command; 
+        std::map<char, float> word; 
 
-        std::map<char, float> args; 
     };
 
 } // namespace Core
@@ -40,4 +78,5 @@ namespace Core {
 //  - arguments are of form <char><float>
 //  - comments begin with ; and are not machine executable
 //  - comments always at the end of the line
+//  - arguments are expected in order X Y Z E A B C for G0/G1/G2/G3
 ////////////////////////////////////////////////////////////////////////////////
