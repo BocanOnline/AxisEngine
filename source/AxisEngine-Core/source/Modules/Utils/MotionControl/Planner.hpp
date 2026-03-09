@@ -9,6 +9,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "Modules/Utils/MotionControl/Types.hpp"
+
 namespace Core {
 
     class Planner {
@@ -16,6 +18,8 @@ namespace Core {
     public:
         Planner();
         ~Planner();
+
+        bool AppendBlock(Core::ActuatorCoordinates, int, float, float, float*, float, bool);
         
     };
 

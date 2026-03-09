@@ -42,11 +42,13 @@ namespace Core {
         void Run();
 
         void AddModule(std::shared_ptr<Module> module);
-        void RegisterForEvent(Event& event, 
-                              std::function<void(std::shared_ptr<void>)> function);
+        void RegisterForEvent(Event& event, std::function<void(std::shared_ptr<void>)> function);
         void UnRegisterForEvent(Event& event, std::shared_ptr<Module> module);
         bool HasEvent(Event& event);
         void CallEvent(Event& event, std::shared_ptr<void> argument);
+
+        bool IsHalted();
+        bool GetFeedHold();
 
     public:
         std::shared_ptr<SerialConsole>          m_SerialConsole;
@@ -74,4 +76,6 @@ namespace Core {
 // [ ] add config file input and parsing (Configurator Class?)
 // [ ] add multi-threading (goal: Kernel controls threads for application)
 // [ ] add sophisticated logging (goal: Kernel controls logging streams)
+// [ ] implement IsHalted and GetFeedHold
+// [ ] add private config data
 ////////////////////////////////////////////////////////////////////////////////

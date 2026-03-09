@@ -24,6 +24,12 @@ namespace Core {
         void SetMaxRate(float);
         void SetAcceleration(float);
 
+        float GetLastMilestone();
+        float GetMaxRate();
+        float GetAcceleration();
+        
+        bool IsSelected();
+
     private:
         Pin m_StepPin;
         Pin m_DirectionPin;
@@ -36,6 +42,10 @@ namespace Core {
         float m_StepsPerMillimeter;
         float m_MaxRate;
         float m_Acceleration;
+
+        volatile struct {
+            bool selected: 1;
+        };
         
     };
 

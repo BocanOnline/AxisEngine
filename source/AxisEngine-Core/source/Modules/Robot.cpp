@@ -12,6 +12,8 @@
 #include <array>
 #include <vector>
 
+#include <cmath>
+
 #include "../Kernel.hpp"
 
 #include "../Events/IdleEvent.hpp"
@@ -115,7 +117,8 @@ void Core::Robot::OnModuleLoaded() {
     std::cout << "[Robot.cpp] StepperMotors initialized..." << std::endl;
 
     // set actuator positions to current cartesian position (X0, Y0, Z0) 
-    m_MachinePosition = { 0.0F, 0.0F, 0.0F };
+    m_MachinePosition            = { 0.0F, 0.0F, 0.0F };
+    m_CompensatedMachinePosition = { 0.0F, 0.0F, 0.0F };
     m_MachineSolution->CartesianToActuator(m_MachinePosition, m_ActuatorPosition);
     for(int i = 0; i < c_MaxActuators; i++) {
         m_Actuators.at(i).ChangeLastMilestone(m_ActuatorPosition.at(i));
@@ -274,11 +277,223 @@ void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMo
 
 bool Core::Robot::AppendLine(std::shared_ptr<Core::Gcode> gcode, Core::CartesianCoordinates target_position, float rate) {
 
-    return false;
+    // catch negative or zero feed/seek rate
+    if(rate <= 0.0F) {
+        return false;
+    }
+
+    // calculate straight line distance of move
+    // pythagorean theorem 3d
+    float distance = sqrtf( std::powf(target_position.at(static_cast<int>(Core::Axis::X)) - m_MachinePosition.at(static_cast<int>(Core::Axis::X)), 2) +
+                            std::powf(target_position.at(static_cast<int>(Core::Axis::Y)) - m_MachinePosition.at(static_cast<int>(Core::Axis::Y)), 2) +
+                            std::powf(target_position.at(static_cast<int>(Core::Axis::Z)) - m_MachinePosition.at(static_cast<int>(Core::Axis::Z)), 2) );
+
+    // determine number of segments to cut
+    int segments;
+
+    // segmentation settings disabled or Z only move
+    if(m_DisableSegmentation || (!m_SegmentZMoves && !gcode->has_x && !gcode->has_y)) {
+        segments = 1;
+
+    // for delta robots
+    } else if (m_DeltaSegmentsPerSecond > 1.0F) {
+        float seconds = distance / rate;
+        segments = std::max(1.0F, std::ceilf(m_DeltaSegmentsPerSecond * seconds));
+
+    // most cases for cartesian robots
+    } else {
+        if(m_MillimetersPerLineSegment == 0.0F) {
+            segments = 1;
+        } else {
+            segments = std::ceilf(distance / m_MillimetersPerLineSegment);
+        }
+    }
+
+    // cut line into segments 
+    bool moved = false;
+    if(segments > 1) {
+      
+        // this currently only accounts for three axes and no extruder
+        // m_NumberOfActuators and Core::CartesianCoordinates could not match
+        // TODO
+        Core::CartesianCoordinates segment_change;
+        Core::CartesianCoordinates segment_end;
+
+        // distance per segment
+        for(int i = 0; i < m_NumberOfActuators; i++) {
+            segment_change.at(i) = (target_position.at(i) - m_MachinePosition.at(i)) / segments;
+        }
+        
+        // cut segments and append to milestone
+        // segment.at(0) is the end point of the previous move
+        // start at segment.at(1)
+        // stop at segments - 1 (i < segments)
+        for(int i = 1; i < segments; i++) {
+            if(Core::Kernel::Get().IsHalted()) {
+                return false;
+            }
+            for(int j = 0; j < m_NumberOfActuators; j++) {
+                segment_end.at(j) += segment_change.at(j);
+            }
+
+            bool b = AppendMilestone(segment_end, rate);
+            moved = moved || b;
+        } 
+    }
+
+    // append end of each section to the queue, call append_milestone 
+    if(AppendMilestone(target_position, rate)) {
+        moved = true;
+    }
+    m_NextCommandIsMCS = false;
+
+    return moved;
 }
 
 bool Core::Robot::ComputeArc(std::shared_ptr<Core::Gcode> gcode, Core::CartesianCoordinates target_position, Core::MotionMode motion_mode) {
 
+    return false;
+}
+
+bool Core::Robot::AppendArc(std::shared_ptr<Core::Gcode> gcode, Core::CartesianCoordinates target_position, float radius, bool is_clockwise) {
+
+    return false;
+}
+
+bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, float rate) {
+
+    Core::CartesianCoordinates transformed_target_position;
+    Core::CartesianCoordinates distance_per_axis;
+    Core::CartesianCoordinates unit_vector;
+
+    // unity transform by default
+    transformed_target_position = target_position;
+
+    // compensation transform
+    // TODO
+
+    // check soft endstops
+    // TODO
+  
+    // determine distance moved by each axis using transformed target from compensated machine position
+    bool moved = false;
+    float sum_of_squares = 0;
+
+    for(int i = 0; i < m_NumberOfActuators; i++) {
+        distance_per_axis.at(i) = transformed_target_position.at(i) - m_CompensatedMachinePosition.at(i);
+        
+        if(std::fabsf(distance_per_axis.at(i)) < 0.00001F)
+              continue;
+        
+        moved = true;
+        if(i < static_cast<int>(Core::Axis::MaxPositionAxes)) {
+            sum_of_squares += std::powf(distance_per_axis.at(i), 2); 
+        }
+    }
+
+    if(!moved)
+        return false;
+
+    // determine if this is a primary axis move
+    bool auxillary_move = true;
+
+    for(int i = 0; i < static_cast<int>(Core::Axis::MaxPositionAxes); i++) {
+        if(std::fabsf(distance_per_axis.at(i)) >= 0.00001F) {
+            auxillary_move = false;
+            break;
+        }
+    }
+
+    // determine total distance moved
+    // pythagorean theorem 3d
+    float total_distance = auxillary_move ? 0 : std::sqrtf(sum_of_squares);
+
+    // catch divide by zero errors
+    if(!auxillary_move && total_distance < 0.0000F)
+        return false;
+
+    // catch rate exceeds configured max speeds
+    if(!auxillary_move) {
+        for(int i = static_cast<int>(Core::Axis::X); i < static_cast<int>(Core::Axis::MaxPositionAxes); i++) {
+            
+            // find unit vectors
+            unit_vector.at(i) = distance_per_axis.at(i) / total_distance;
+
+            if(i < static_cast<int>(Core::Axis::MaxPositionAxes) && m_AxisMaxSpeed.at(i) > 0) {
+                float axis_speed = std::fabsf(unit_vector.at(i) * rate);
+
+                if(axis_speed > m_AxisMaxSpeed.at(i)) {
+                    rate *= (m_AxisMaxSpeed.at(i) / axis_speed);
+                }
+            }
+
+            if(m_GlobalMaxSpeed > 0 && rate > m_GlobalMaxSpeed) {
+                rate = m_GlobalMaxSpeed;
+            }
+        }
+    }
+
+    // determine target actuator position from compensated target position X Y Z
+    Core::ActuatorCoordinates target_actuator_position;
+    if(!m_DisableArmSolution) {
+        m_MachineSolution->CartesianToActuator(transformed_target_position, target_actuator_position);
+        if(Core::Kernel::Get().IsHalted()) {
+            return false;    
+        }
+    } else {
+    
+        // used in special situations (SCARA)
+        for(int i = static_cast<int>(Core::Axis::X); i < static_cast<int>(Core::Axis::MaxPositionAxes); i++) {
+            target_actuator_position.at(i) = transformed_target_position.at(i);
+        }
+    }
+
+    // determine target actuator position from compensated target position E A B C
+    // TODO
+
+    // start with default acceleration
+    float acceleration = m_DefaultAcceleration;
+    float seconds = rate / total_distance;
+
+    // catch actuator speeds exceed configured max actuator speeds
+    for(int actuator = 0; actuator < m_NumberOfActuators; actuator++) {
+        float d = std::fabsf(target_actuator_position.at(actuator) - m_Actuators.at(actuator).GetLastMilestone());
+        if(d < 0.00001F || !m_Actuators.at(actuator).IsSelected()) {
+            continue;
+        }
+
+        float actuator_rate = d * seconds;
+        if(actuator_rate > m_Actuators.at(actuator).GetMaxRate()) {
+            rate *= (m_Actuators.at(actuator).GetMaxRate() / actuator_rate);
+            seconds = rate / total_distance;
+        }
+
+        // adjust acceleration to lowest found
+        float ma = m_Actuators.at(actuator).GetAcceleration();
+        if(!std::isnan(ma)) {
+            float ca = (d / total_distance) * acceleration;
+            if(ca > ma) {
+                acceleration *= (ma / ca); 
+            }
+        }
+    }
+    
+    // check feed hold status
+    while(Core::Kernel::Get().GetFeedHold()) {
+        Core::IdleEvent idle_event;
+        Core::Kernel::Get().CallEvent(idle_event, nullptr);
+        
+        if(Core::Kernel::Get().IsHalted()) {
+            return false;
+        }
+    }
+    
+    // append block to the planner
+    if(m_Planner->AppendBlock(target_actuator_position, m_NumberOfActuators, rate, total_distance, auxillary_move ? nullptr : unit_vector&, acceleration, m_IsG123)) {
+        m_CompensatedMachinePosition = transformed_target_position;
+        return true;
+    }
+ 
     return false;
 }
 
@@ -292,4 +507,7 @@ bool Core::Robot::ComputeArc(std::shared_ptr<Core::Gcode> gcode, Core::Cartesian
 // [ ] add other G and M codes required by standard
 // [ ] implement work and tool coordinate systems and offsets
 // [ ] implement extruder parameters with E argument
+// [ ] implement Extruder object to offload from Robot?
+// [ ] implement compensation transform
+// [ ] implement arc G2 G3
 ////////////////////////////////////////////////////////////////////////////////

@@ -60,6 +60,8 @@ namespace Core {
         void ProcessMove(std::shared_ptr<Core::Gcode>, Core::MotionMode);
         bool AppendLine(std::shared_ptr<Core::Gcode>, Core::CartesianCoordinates, float);
         bool ComputeArc(std::shared_ptr<Core::Gcode>, Core::CartesianCoordinates, Core::MotionMode);
+        bool AppendArc(std::shared_ptr<Core::Gcode>, Core::CartesianCoordinates, float, bool);
+        bool AppendMilestone(Core::CartesianCoordinates, float);
 
     private:
         std::shared_ptr<Conveyer>  m_Conveyer;
