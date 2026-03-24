@@ -36,6 +36,7 @@ namespace Core {
         virtual void OnSetPublicData(std::shared_ptr<void> argument) {}
         virtual void OnHalt(std::shared_ptr<void> argument) {}
         virtual void OnEnable(std::shared_ptr<void> argument) {}
+        virtual void OnBlockReady(std::shared_ptr<void> argument) {}
     };
 
 } // namespace Core

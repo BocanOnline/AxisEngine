@@ -18,11 +18,11 @@
 #include "Events/MainLoopEvent.hpp"
 
 #include "Module.hpp"
-#include "Modules/SerialConsole.hpp"
-#include "Modules/GcodeDispatch.hpp"
-#include "Modules/Robot.hpp"
-#include "Modules/SlowTicker.hpp"
-#include "Modules/StepTicker.hpp"
+#include "Modules/Communication/SerialConsole.hpp"
+#include "Modules/Communication/GcodeDispatch.hpp"
+#include "Modules/Robot/Robot.hpp"
+#include "Modules/Workers/SlowTicker.hpp"
+#include "Modules/Workers/StepTicker.hpp"
 
 Core::Kernel Core::Kernel::s_Instance;
 
