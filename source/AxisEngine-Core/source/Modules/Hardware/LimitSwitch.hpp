@@ -7,3 +7,18 @@
 // app: AxisEngine-Core
 // file: LimitSwitch.hpp
 ////////////////////////////////////////////////////////////////////////////////
+
+#include "Module.hpp"
+
+namespace Core {
+
+    class LimitSwitch : public Module {
+
+    public:
+        LimitSwitch();
+        ~LimitSwitch();
+
+        virtual void OnModuleLoaded() override;
+    };
+
+}

@@ -9,16 +9,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Pin.hpp"
+#include "Module.hpp"
+
+#include "Utils/Pin.hpp"
 
 namespace Core {
 
-    class StepperMotor {
+    class StepperMotor : public Module {
 
     public:
         StepperMotor(const Pin&, const Pin&, const Pin&);
         ~StepperMotor();
        
+        virtual void OnModuleLoaded() override;
+
         void ChangeStepsPerMillimeter(float);
         void ChangeLastMilestone(float);
         void UpdateLastMilestone(float, int);

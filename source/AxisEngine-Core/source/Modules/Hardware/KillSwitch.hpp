@@ -7,3 +7,18 @@
 // app: AxisEngine-Core
 // file: KillSwitch.hpp
 ////////////////////////////////////////////////////////////////////////////////
+
+#include "Module.hpp"
+
+namespace Core {
+
+    class KillSwitch : public Module {
+
+    public:
+        KillSwitch();
+        ~KillSwitch();
+
+        virtual void OnModuleLoaded() override;
+    };
+
+}

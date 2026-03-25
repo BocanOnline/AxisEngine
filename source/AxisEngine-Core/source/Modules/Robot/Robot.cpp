@@ -22,7 +22,7 @@
 
 #include "Modules/Communication/Utils/Gcode.hpp"
 #include "Modules/Hardware/StepperMotor.hpp"
-#include "Modules/Hardware/Pin.hpp"
+#include "Modules/Hardware/Utils/Pin.hpp"
 
 #include "Solutions/CartesianSolution.hpp"
 #include "Utils/Block.hpp"
