@@ -13,7 +13,7 @@
 
 #include "Module.hpp"
 
-#include "Utils/Types.hpp"
+#include "Modules/MotionControl/Utils/Types.hpp"
 
 namespace Core {
 
@@ -27,16 +27,18 @@ namespace Core {
         
         virtual void OnModuleLoaded() override;
         
-        virtual void OnBlockReady(std::shared_ptr<void> argument) override;
+        virtual void OnBlockReceived(std::shared_ptr<void> argument) override;
 
     private:
-        bool AppendBlock(std::shared_ptr<Core::Block>);
+        void AppendBlock(std::shared_ptr<Core::Block>);
+        void RecalculateProfiles();
 
-        float m_PreviousUnitVector[static_cast<int>(Core::Axis::MaxPositionAxes)];
-
-        float m_JuntionDeviation;
-        float m_ZJunctionDeviation;
-        float m_MinimumPlannerSpeed;
+        struct {
+            float m_PreviousUnitVector[static_cast<int>(Core::Axis::MaxPositionAxes)];
+            float m_JuntionDeviation;
+            float m_ZJunctionDeviation;
+            float m_MinimumPlannerSpeed;
+        };
         
     };
 

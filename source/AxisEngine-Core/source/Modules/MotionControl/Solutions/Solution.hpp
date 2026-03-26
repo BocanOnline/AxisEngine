@@ -5,24 +5,23 @@
 // license: The Unlicense
 // project: AxisEngine
 // app: AxisEngine-Core
-// file: Conveyer.hpp
+// file: Solution.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Module.hpp"
+#include "Modules/MotionControl/Utils/Types.hpp"
 
 namespace Core {
 
-    class Conveyer : public Module {
+    class Solution {
 
     public:
-        Conveyer();
-        virtual ~Conveyer() override;
-        
-        virtual void OnModuleLoaded() override;
-     
-        virtual void OnIdle(std::shared_ptr<void> argument) override;
-        
+        Solution() {}
+        virtual ~Solution() = default;
+
+        virtual void CartesianToActuator(const CartesianCoordinates, ActuatorCoordinates&) = 0;
+        virtual void ActuatorToCartesian(const ActuatorCoordinates, CartesianCoordinates&) = 0;
+
     };
 
 } // namespace Core

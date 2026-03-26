@@ -5,17 +5,17 @@
 // license: The Unlicense
 // project: AxisEngine
 // app: AxisEngine-Core
-// file: BlockReadyEvent.cpp
+// file: BlockReceivedEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include <string>
 
-#include "BlockReadyEvent.hpp"
+#include "BlockReceivedEvent.hpp"
 
-Core::BlockReadyEvent::BlockReadyEvent() {}
+Core::BlockReceivedEvent::BlockReceivedEvent() {}
 
-Core::BlockReadyEvent::~BlockReadyEvent() {}
+Core::BlockReceivedEvent::~BlockReceivedEvent() {}
 
-std::string Core::BlockReadyEvent::GetName() const {
+std::string Core::BlockReceivedEvent::GetName() const {
 
     return "BLOCK_READY";
 }

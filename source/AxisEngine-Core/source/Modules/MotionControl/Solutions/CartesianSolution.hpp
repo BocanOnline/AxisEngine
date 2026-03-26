@@ -11,7 +11,7 @@
 
 #include "Solution.hpp"
 
-#include "Modules/Robot/Utils/Types.hpp"
+#include "Modules/MotionControl/Utils/Types.hpp"
 
 namespace Core {
 

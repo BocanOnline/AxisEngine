@@ -15,8 +15,8 @@
 #include "Events/ConsoleLineReceivedEvent.hpp"
 #include "Events/GcodeReceivedEvent.hpp"
 
-#include "Utils/SerialMessage.hpp"
-#include "Utils/Gcode.hpp"
+#include "Modules/Communication/Utils/SerialMessage.hpp"
+#include "Modules/Communication/Utils/Gcode.hpp"
 
 #include "GcodeDispatch.hpp"
 
@@ -34,10 +34,8 @@ Core::GcodeDispatch::~GcodeDispatch() {
 void Core::GcodeDispatch::OnModuleLoaded() {
 
     Core::ConsoleLineReceivedEvent on_console_line_received_event;
-    auto on_console_line_received_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::GcodeDispatch::OnConsoleLineReceived(argument); };
+    auto on_console_line_received_function = [this](std::shared_ptr<void> argument){ this->Core::GcodeDispatch::OnConsoleLineReceived(argument); };
     this->RegisterForEvent(on_console_line_received_event, on_console_line_received_function);
-
     std::cout << "[GcodeDispatch.cpp] GcodeDispatch registered for ConsoleLineReceivedEvent..." << std::endl;
 }
 
@@ -85,74 +83,71 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
         }
         
         if(sub_string.at(i) == 'G') {
-            gcode->has_g = true;
+            gcode->Has_G = true;
             sub_string.erase(i, 1);
-            gcode->add_word('G', std::stof(sub_string, &i));
+            gcode->AddWord('G', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'M') {
-            gcode->has_m = true;
+            gcode->Has_M = true;
             sub_string.erase(i, 1);
-            gcode->add_word('M', std::stof(sub_string, &i)); 
+            gcode->AddWord('M', std::stof(sub_string, &i)); 
         }
         else if(sub_string.at(i) == 'X') {
-            gcode->has_x = true;
+            gcode->Has_X = true;
             sub_string.erase(i, 1);
-            gcode->add_word('X', std::stof(sub_string, &i));
+            gcode->AddWord('X', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'Y') {
-            gcode->has_y = true;
+            gcode->Has_Y = true;
             sub_string.erase(i, 1);
-            gcode->add_word('Y', std::stof(sub_string, &i));
+            gcode->AddWord('Y', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'Z') {
-            gcode->has_z = true;
+            gcode->Has_Z = true;
             sub_string.erase(i, 1);
-            gcode->add_word('Z', std::stof(sub_string, &i));
+            gcode->AddWord('Z', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'E') {
-            gcode->has_e = true;
+            gcode->Has_E = true;
             sub_string.erase(i, 1);
-            gcode->add_word('E', std::stof(sub_string, &i));
+            gcode->AddWord('E', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'A') {
-            gcode->has_z = true;
+            gcode->Has_Z = true;
             sub_string.erase(i, 1);
-            gcode->add_word('A', std::stof(sub_string, &i));
+            gcode->AddWord('A', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'B') {
-            gcode->has_b = true;
+            gcode->Has_B = true;
             sub_string.erase(i, 1);
-            gcode->add_word('B', std::stof(sub_string, &i));
+            gcode->AddWord('B', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'C') {
-            gcode->has_c = true;
+            gcode->Has_C = true;
             sub_string.erase(i, 1);
-            gcode->add_word('C', std::stof(sub_string, &i));
+            gcode->AddWord('C', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'F') {
-            gcode->has_f = true;
+            gcode->Has_F = true;
             sub_string.erase(i, 1);
-            gcode->add_word('F', std::stof(sub_string, &i));
+            gcode->AddWord('F', std::stof(sub_string, &i));
         }
         else if(sub_string.at(i) == 'S') {
-            gcode->has_s = true;
+            gcode->Has_S = true;
             sub_string.erase(i, 1);
-            gcode->add_word('S', std::stof(sub_string, &i));
+            gcode->AddWord('S', std::stof(sub_string, &i));
         }
         else {
             char prefix = sub_string.at(i);
             sub_string.erase(i, 1);
-            gcode->add_word(prefix, std::stof(sub_string, &i));
+            gcode->AddWord(prefix, std::stof(sub_string, &i));
         }
     } while(std::string::npos != n);
 
     std::cout << "[GcodeDispatch.cpp] Gcode created..." << std::endl;
     std::cout << "[GcodeDispatch.cpp] Command: ";
-    if(gcode->has_g) { std::cout << "G" << gcode->get_ivalue('G') << std::endl; }
-    if(gcode->has_m) { std::cout << "M" << gcode->get_ivalue('M') << std::endl; }
-    for(const auto& [key, value] : gcode->word) {
-        std::cout << "[GcodeDispatch.cpp] Argument: " << key << value << std::endl;
-    }
+    if(gcode->Has_G) { std::cout << "G" << gcode->GetValue_I('G') << std::endl; }
+    if(gcode->Has_M) { std::cout << "M" << gcode->GetValue_I('M') << std::endl; }
     
     Core::GcodeReceivedEvent on_gcode_received_event;
     Core::Kernel::Get().CallEvent(on_gcode_received_event, gcode);

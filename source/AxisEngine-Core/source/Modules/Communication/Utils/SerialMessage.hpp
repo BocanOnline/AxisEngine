@@ -13,7 +13,11 @@
 
 namespace Core {
 
-    struct SerialMessage {
+    class SerialMessage {
+
+    public:
+        SerialMessage() = default;
+        ~SerialMessage() = default;
 
         std::string message;
     };

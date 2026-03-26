@@ -14,15 +14,13 @@
 
 #include "Module.hpp"
 
-#include "Utils/Types.hpp"
+#include "Modules/MotionControl/Utils/Types.hpp"
 
 namespace Core {
 
     class StepperMotor;
     class Gcode;
     class Solution;
-    class Conveyer;
-    class Planner;
 
     class Robot : public Module {
 

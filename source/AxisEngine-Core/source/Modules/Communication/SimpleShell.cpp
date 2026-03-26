@@ -13,7 +13,7 @@
 
 #include "Events/ConsoleLineReceivedEvent.hpp"
 
-#include "Utils/SerialMessage.hpp"
+#include "Modules/Communication/Utils/SerialMessage.hpp"
 
 #include "SimpleShell.hpp"
 

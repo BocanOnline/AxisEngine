@@ -10,54 +10,38 @@
 #pragma once
 
 #include <map>
-#include <cmath>
 
 namespace Core {
 
-    struct Gcode {
+    class Gcode {
     
     public:
-        float get_fvalue(char letter) {
-            
-            if(auto iterator = word.find(letter); iterator != word.end()) {
-                return iterator->second;
-            }
-            else {
-                return std::nan("");
-            } 
-        }
-        
-        int get_ivalue(char letter) {
-            
-            if(auto iterator = word.find(letter); iterator != word.end()) {
-                return static_cast<int>(iterator->second);
-            }
-            else {
-                return std::nan("");
-            } 
-        }
-        
-        void add_word(char letter, float number) {
-            
-            word.insert(std::pair<char, float>(letter, number));
-        }
+
+        Gcode() = default;
+        ~Gcode() = default;
+
+        float GetValue_F(char);
+        int   GetValue_I(char);
+
+        void AddWord(char, float);
 
     public:
         struct {
-            bool has_g: 1 = 0;
-            bool has_m: 1 = 0;
-            bool has_x: 1 = 0;
-            bool has_y: 1 = 0;
-            bool has_z: 1 = 0;
-            bool has_e: 1 = 0;
-            bool has_a: 1 = 0;
-            bool has_b: 1 = 0;
-            bool has_c: 1 = 0;
-            bool has_f: 1 = 0;
-            bool has_s: 1 = 0;
+            bool Has_G: 1 = 0;
+            bool Has_M: 1 = 0;
+            bool Has_X: 1 = 0;
+            bool Has_Y: 1 = 0;
+            bool Has_Z: 1 = 0;
+            bool Has_E: 1 = 0;
+            bool Has_A: 1 = 0;
+            bool Has_B: 1 = 0;
+            bool Has_C: 1 = 0;
+            bool Has_F: 1 = 0;
+            bool Has_S: 1 = 0;
         };
 
-        std::map<char, float> word; 
+    private:
+        std::map<char, float> m_Word; 
 
     };
 

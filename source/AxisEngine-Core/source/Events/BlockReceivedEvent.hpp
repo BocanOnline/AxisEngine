@@ -5,22 +5,24 @@
 // license: The Unlicense
 // project: AxisEngine
 // app: AxisEngine-Core
-// file: Solution.hpp
+// file: BlockReceivedEvent.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Modules/Robot/Utils/Types.hpp"
+#include <string>
+
+#include "../Event.hpp"
+
 
 namespace Core {
 
-    class Solution {
+    class BlockReceivedEvent : public Core::Event {
 
     public:
-        Solution() {}
-        virtual ~Solution() = default;
-
-        virtual void CartesianToActuator(const CartesianCoordinates, ActuatorCoordinates&) = 0;
-        virtual void ActuatorToCartesian(const ActuatorCoordinates, CartesianCoordinates&) = 0;
+        BlockReceivedEvent();
+        virtual ~BlockReceivedEvent() override;
+        
+        virtual std::string GetName() const override;
 
     };
 

@@ -16,8 +16,14 @@
 
 namespace Core {
 
-    struct Block {
+    class Block {
 
+    public:
+        Block() = default;
+        ~Block() = default;
+
+        void MakeReady();
+        
         std::array<int, 3> steps;           // number of steps for each axis for this block
         int steps_event_count;              // steps for longest axis
         float nominal_rate;                 // nominal rate in steps per second
@@ -60,7 +66,7 @@ namespace Core {
             //bool recalculate_flag: 1;       // planner flag to recalculate trapezoids on entry juntion
             //bool nominal_length_flag: 1;    // planner flag for nominal speed always reached
             //bool is_ready: 1;               // 
-            //bool primary_axis: 1;           // set if this move is a primary axis
+            bool primary_axis: 1;           // set if this move is a primary axis
             bool is_g123: 1;                // set if this is a G1 or G2 or G3
             //volatile bool is_ticking: 1;    // set when block is being actively ticked by the stepticker
             //volatile bool locked: 1;        // set to true when critial data is being updated, stepticker has to skip if set

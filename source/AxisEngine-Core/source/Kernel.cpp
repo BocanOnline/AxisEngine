@@ -77,8 +77,7 @@ void Core::Kernel::AddModule(std::shared_ptr<Module> module) {
     module->OnModuleLoaded();     
 }
 
-void Core::Kernel::RegisterForEvent(Event& event, 
-        std::function<void(std::shared_ptr<void>)> function) {
+void Core::Kernel::RegisterForEvent(Event& event, std::function<void(std::shared_ptr<void>)> function) {
     
     if (!Core::Kernel::HasEvent(event)) {
     

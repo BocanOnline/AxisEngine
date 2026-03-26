@@ -28,8 +28,8 @@ Core::Conveyer::~Conveyer() {
 void Core::Conveyer::OnModuleLoaded() {
 
     Core::IdleEvent on_idle_event;
-    auto on_idle_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::Conveyer::OnIdle(argument); };
+    auto on_idle_function = [this](std::shared_ptr<void> argument){ this->Core::Conveyer::OnIdle(argument); };
+
     this->RegisterForEvent(on_idle_event, on_idle_function);
 
     std::cout << "[Conveyer.cpp] Conveyer registered for IdleEvent..." << std::endl;

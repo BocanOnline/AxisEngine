@@ -15,7 +15,7 @@
 
 #include "Kernel.hpp"
 
-#include "Events/BlockReadyEvent.hpp"
+#include "Events/BlockReceivedEvent.hpp"
 #include "Events/GcodeReceivedEvent.hpp"
 #include "Events/IdleEvent.hpp"
 #include "Events/SecondTickEvent.hpp"
@@ -23,10 +23,9 @@
 #include "Modules/Communication/Utils/Gcode.hpp"
 #include "Modules/Hardware/StepperMotor.hpp"
 #include "Modules/Hardware/Utils/Pin.hpp"
-
-#include "Solutions/CartesianSolution.hpp"
-#include "Utils/Block.hpp"
-#include "Utils/Types.hpp"
+#include "Modules/MotionControl/Solutions/CartesianSolution.hpp"
+#include "Modules/MotionControl/Utils/Block.hpp"
+#include "Modules/MotionControl/Utils/Types.hpp"
 
 #include "Robot.hpp"
 
@@ -46,27 +45,18 @@ Core::Robot::~Robot() {
 void Core::Robot::OnModuleLoaded() {
 
     Core::IdleEvent on_idle_event;
-    auto on_idle_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::Robot::OnIdle(argument); };
-
+    auto on_idle_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function);
-
     std::cout << "[Robot.cpp] Robot registered for IdleEvent..." << std::endl;
     
     Core::GcodeReceivedEvent on_gcode_received_event;
-    auto on_gcode_received_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::Robot::OnGcodeReceived(argument); };
-   
+    auto on_gcode_received_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnGcodeReceived(argument); }; 
     this->RegisterForEvent(on_gcode_received_event, on_gcode_received_function);
-
     std::cout << "[Robot.cpp] Robot registered for GcodeReceivedEvent..." << std::endl;
     
     Core::SecondTickEvent on_second_tick_event;
-    auto on_second_tick_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::Robot::OnSecondTick(argument); };
-   
-    this->RegisterForEvent(on_second_tick_event, on_second_tick_function);
-    
+    auto on_second_tick_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnSecondTick(argument); }; 
+    this->RegisterForEvent(on_second_tick_event, on_second_tick_function); 
     std::cout << "[Robot.cpp] Robot registered for SecondTickEvent..." << std::endl;
 
     // read configuration and register machine solution
@@ -143,8 +133,8 @@ void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
 
     Core::MotionMode motion_mode;
     
-    if(gcode->has_g) {
-        switch(gcode->get_ivalue('G')) {
+    if(gcode->Has_G) {
+        switch(gcode->GetValue_I('G')) {
             case 0:
                 motion_mode = Core::MotionMode::Seek; 
                 std::cout << "[Robot.cpp] G0 received..." << std::endl; 
@@ -195,39 +185,39 @@ void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMo
         if(m_AbsoluteMode) {
         
             // absolute mode; need to add wcs and tcs offsets 
-            if(gcode->has_x) {
-                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X');
+            if(gcode->Has_X) {
+                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->GetValue_F('X');
             }
-            if(gcode->has_y) {
-                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y');
+            if(gcode->Has_Y) {
+                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->GetValue_F('Y');
             }
-            if(gcode->has_z) {
-                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z');
+            if(gcode->Has_Z) {
+                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->GetValue_F('Z');
             }
         } else { 
 
             // relative mode 
-            if(gcode->has_x) {
-                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            if(gcode->Has_X) {
+                target_position.at(static_cast<int>(Core::Axis::X)) = gcode->GetValue_F('X') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
             }
-            if(gcode->has_y) {
-                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            if(gcode->Has_Y) {
+                target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->GetValue_F('Y') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
             }
-            if(gcode->has_z) {
-                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
+            if(gcode->Has_Z) {
+                target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->GetValue_F('Z') + m_MachinePosition.at(static_cast<int>(Core::Axis::X));
             }
         }
     } else {
 
         // machine coordinate system
-        if(gcode->has_x) {
-            target_position.at(static_cast<int>(Core::Axis::X)) = gcode->get_fvalue('X');
+        if(gcode->Has_X) {
+            target_position.at(static_cast<int>(Core::Axis::X)) = gcode->GetValue_F('X');
         }
-        if(gcode->has_y) {
-            target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->get_fvalue('Y');
+        if(gcode->Has_Y) {
+            target_position.at(static_cast<int>(Core::Axis::Y)) = gcode->GetValue_F('Y');
         }
-        if(gcode->has_z) {
-            target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->get_fvalue('Z');
+        if(gcode->Has_Z) {
+            target_position.at(static_cast<int>(Core::Axis::Z)) = gcode->GetValue_F('Z');
         }
     }
 
@@ -235,11 +225,11 @@ void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMo
     // TODO
 
     // process changes to SeekRate and FeedRate with F argument
-    if(gcode->has_f) {
+    if(gcode->Has_F) {
         if(motion_mode == Core::MotionMode::Seek) {
-            m_SeekRate = gcode->get_fvalue('F');
+            m_SeekRate = gcode->GetValue_F('F');
         } else {
-            m_FeedRate = gcode->get_fvalue('F');
+            m_FeedRate = gcode->GetValue_F('F');
         }
     }
 
@@ -287,7 +277,7 @@ bool Core::Robot::AppendLine(std::shared_ptr<Core::Gcode> gcode, Core::Cartesian
     int segments;
 
     // segmentation settings disabled or Z only move
-    if(m_DisableSegmentation || (!m_SegmentZMoves && !gcode->has_x && !gcode->has_y)) {
+    if(m_DisableSegmentation || (!m_SegmentZMoves && !gcode->Has_X && !gcode->Has_Y)) {
         segments = 1;
 
     // for delta robots
@@ -534,12 +524,21 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
         return false;
     }
 
-    Core::BlockReadyEvent on_block_ready_event;
-    Core::Kernel::Get().CallEvent(on_block_ready_event, block);
+    block->primary_axis = true;
+    if(block->steps.at(0) == 0 && block->steps.at(1) == 0) {
+        
+        // z-axis only move
+        if(block->steps.at(2) != 0) {
+
+        }
+
+    }
+
+    Core::BlockReceivedEvent on_block_received_event;
+    Core::Kernel::Get().CallEvent(on_block_received_event, block);
 
     return true;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 // Machine Coordinate System - physical machine axes
 // Work Coordinate System    - reference frame for workpiece
@@ -554,4 +553,5 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
 // [ ] implement compensation transform
 // [ ] implement arc G2 G3
 // [ ] implement parameters with Q argument
+// [ ] add actuator/stepper motor enum class separate from Axis enum class
 ////////////////////////////////////////////////////////////////////////////////

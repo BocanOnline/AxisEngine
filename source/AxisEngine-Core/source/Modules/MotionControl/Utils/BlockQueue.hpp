@@ -34,7 +34,14 @@ namespace Core {
         
         std::vector<std::shared_ptr<Core::Block>>::reverse_iterator r_Begin() { return m_BlockQueue.rbegin(); }
         std::vector<std::shared_ptr<Core::Block>>::reverse_iterator r_End()   { return m_BlockQueue.rend();   }
-        
+
+        void IncrementHeadIndex();
+        void IncrementMarkIndex();
+        void IncrementTailIndex();
+
+        std::shared_ptr<Core::Block> GetPreviousBlock();
+        std::shared_ptr<Core::Block> GetNextBlock();
+
     private:
         std::vector<std::shared_ptr<Core::Block>> m_BlockQueue;
 
