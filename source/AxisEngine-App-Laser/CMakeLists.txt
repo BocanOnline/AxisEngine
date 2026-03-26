@@ -20,7 +20,7 @@ target_include_directories(${APP_LASER_NAME}
 
 target_link_libraries(${APP_LASER_NAME}
     PRIVATE
-        ${CORE_NAME}
+        ${LIB_CORE_NAME}
 )
 
 

@@ -20,5 +20,5 @@ target_include_directories(${APP_PICKER_NAME}
 
 target_link_libraries(${APP_PICKER_NAME}
     PRIVATE
-        ${CORE_NAME}
+        ${LIB_CORE_NAME}
 )

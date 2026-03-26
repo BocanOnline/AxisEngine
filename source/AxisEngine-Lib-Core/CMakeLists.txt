@@ -1,4 +1,4 @@
-message(STATUS "[${CORE_NAME}]: Configuring...")
+message(STATUS "[${LIB_CORE_NAME}]: Configuring...")
 
 file(GLOB_RECURSE CORE_ALL_CXX_SOURCES
     CONFIGURE_DEPENDS
@@ -13,21 +13,21 @@ file(GLOB_RECURSE CORE_TEST_SOURCES
 set(CORE_MODULE_SOURCES ${CORE_ALL_CXX_SOURCES})
 list(REMOVE_ITEM CORE_MODULE_SOURCES ${CORE_TEST_SOURCES})
 
-column_print_list("[${CORE_NAME}]: All Sources:" CORE_ALL_CXX_SOURCES)
-column_print_list("[${CORE_NAME}]: Module Sources:" CORE_MODULE_SOURCES)
-column_print_list("[${CORE_NAME}]: Unit Test Sources:" CORE_TEST_SOURCES)
+column_print_list("[${LIB_CORE_NAME}]: All Sources:" CORE_ALL_CXX_SOURCES)
+column_print_list("[${LIB_CORE_NAME}]: Module Sources:" CORE_MODULE_SOURCES)
+column_print_list("[${LIB_CORE_NAME}]: Unit Test Sources:" CORE_TEST_SOURCES)
 
-add_library(${CORE_NAME} STATIC
+add_library(${LIB_CORE_NAME} STATIC
     ${CORE_MODULE_SOURCES}
 )
 
-target_include_directories(${CORE_NAME}
+target_include_directories(${LIB_CORE_NAME}
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/source
 )
 
 if(BUILD_TESTING AND CORE_TEST_SOURCES)
-    message(STATUS "[${CORE_NAME}]: Configuring unit tests...")
+    message(STATUS "[${LIB_CORE_NAME}]: Configuring unit tests...")
     
     foreach(test_file ${CORE_TEST_SOURCES})
 
@@ -35,7 +35,7 @@ if(BUILD_TESTING AND CORE_TEST_SOURCES)
 
         string(REPLACE ".test.cpp" "_test" test_name ${test_name_raw})
         
-        message(STATUS "[${CORE_NAME}]: Adding test target ${test_name} from ${test_file}.")
+        message(STATUS "[${LIB_CORE_NAME}]: Adding test target ${test_name} from ${test_file}.")
 
         add_executable(${test_name}
             ${test_file}
@@ -43,7 +43,7 @@ if(BUILD_TESTING AND CORE_TEST_SOURCES)
         
         target_link_libraries(${test_name}
             PRIVATE
-            ${CORE_NAME}
+            ${LIB_CORE_NAME}
         )
 
         target_include_directories(${test_name}

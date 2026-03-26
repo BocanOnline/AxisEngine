@@ -20,9 +20,9 @@
 #include "Module.hpp"
 #include "Modules/Communication/SerialConsole.hpp"
 #include "Modules/Communication/GcodeDispatch.hpp"
-#include "Modules/Robot/Robot.hpp"
-#include "Modules/Workers/SlowTicker.hpp"
-#include "Modules/Workers/StepTicker.hpp"
+#include "Modules/MotionControl/Robot.hpp"
+#include "Modules/Timers/SlowTicker.hpp"
+#include "Modules/Timers/StepTicker.hpp"
 
 Core::Kernel Core::Kernel::s_Instance;
 

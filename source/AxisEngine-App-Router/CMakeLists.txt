@@ -20,7 +20,7 @@ target_include_directories(${APP_ROUTER_NAME}
 
 target_link_libraries(${APP_ROUTER_NAME}
     PRIVATE
-        ${CORE_NAME}
+        ${LIB_CORE_NAME}
 )
 
 
