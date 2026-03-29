@@ -15,7 +15,7 @@ This file provides guidance for agentic coding assistants operating in this repo
 
 ## 2. Build Commands
 
-### Full Build
+### CMake Presets
 
 ```bash
 cmake --preset debug && cmake --build --preset debug      # Debug (tests ON)
@@ -27,10 +27,11 @@ cmake --preset release && cmake --build --preset release  # Release (tests OFF)
 ```bash
 ./scripts/build-debug.sh    # Build debug configuration
 ./scripts/build-release.sh  # Build release configuration
-./scripts/build-clean.sh    # Remove all build directories
+./scripts/build-clean.sh    # Remove build artifacts
 ./scripts/run-debug.sh      # Run debug binary
 ./scripts/run-release.sh    # Run release binary
 ./scripts/run-test.sh       # Run all tests with ctest
+./scripts/clean.sh          # Remove build-debug/ and build-release/
 ```
 
 ### Running Tests
@@ -68,7 +69,7 @@ All source files should begin with:
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Kernel.cpp
 ////////////////////////////////////////////////////////////////////////////////
 ```
@@ -136,18 +137,30 @@ public:
 ```
 source/
 ├── AxisEngine-App-Laser/
+├── AxisEngine-App-Picker/
 ├── AxisEngine-App-Plotter/
 ├── AxisEngine-App-Printer/
 ├── AxisEngine-App-Router/
-├── AxisEngine-Core/
-│   ├── source/
-│   │   ├── Kernel.cpp/hpp
-│   │   ├── Module.cpp/hpp
-│   │   ├── Events/
-│   │   └── Modules/
-│   └── test/
-│       └── core.test.cpp
+└── AxisEngine-Lib-Core/
+    ├── source/
+    │   ├── aepch.hpp           # Precompiled header
+    │   ├── AxisEngine.hpp      # Public include
+    │   ├── Core/
+    │   │   ├── Kernel.cpp/hpp
+    │   │   ├── Module.cpp/hpp
+    │   │   ├── Worker.cpp/hpp
+    │   │   ├── Task.cpp/hpp
+    │   │   └── Tool.cpp/hpp
+    │   └── Events/
+    │       └── *.hpp
+    ├── test/
+    │   └── core.test.cpp
+    └── vendor/
 scripts/
+test/
+├── config/
+├── gcode/
+└── scripts/
 ```
 
 ---
@@ -155,8 +168,9 @@ scripts/
 ## 5. Adding New Tests
 
 1. Create a `.test.cpp` file in the module's `test/` directory
-2. Build system auto-discovers tests via `GLOB_RECURSE` for `*.test.cpp`
-3. Tests are automatically registered with ctest
+2. CMake discovers tests via `GLOB_RECURSE` for `*.test.cpp`
+3. Each test file generates an executable `<name>_test`
+4. Tests are automatically registered with ctest
 
 ---
 
@@ -165,11 +179,22 @@ scripts/
 - `BUILD_TESTING`: Enable/disable test building (ON by default for debug)
 - `CMAKE_BUILD_TYPE`: Debug or Release
 - `CMAKE_CXX_STANDARD`: C++23
+- `CMAKE_EXPORT_COMPILE_COMMANDS`: ON (enables clangd integration)
+
+### CMake Functions
+
+- `column_print_list(TITLE LIST_VAR)`: Prints list items with a title header
+
+### Precompiled Headers
+
+Core library uses precompiled headers via `aepch.hpp`
 
 ---
 
 ## 7. Important Notes
 
-- Only `AxisEngine-App-Plotter` and `AxisEngine-Core` are built by default
-- Other apps are commented out in root `CMakeLists.txt`
+- All 6 subprojects are built by default:
+  - AxisEngine-Lib-Core (static library)
+  - AxisEngine-App-Laser, -Picker, -Plotter, -Printer, -Router (executables)
 - The project uses a module/event system where modules register for events with the Kernel
+- Compile commands are exported to `build-debug/compile_commands.json` for clangd

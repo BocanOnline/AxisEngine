@@ -1,11 +1,6 @@
-project: ProjectAxisEngine
+project: AxisEngine
 description: >
-  Implementation of the Module System that is part of the application design of
-  Smoothieware (https://github.com/VandalForge/Smoothieware), the operating system
-  designed for use in CNC machines written in C++ by The Smoothie Project. The 
-  system uses a module interface to enable developers to add custom modules for 
-  increased functionality. Modules register for events with the Kernel and have
-  functions called on events.
+  G-Code interpreter and CNC machine controller inspired by Smoothieware.
 language: C++
 environment: CMake, Make
 requires:
@@ -16,9 +11,10 @@ requires:
 startup:
   - nvim . --(open editor at project root)
 other:
+  - ./scripts/build-clean.sh    --(remove build-debug/ and build-release/) 
   - ./scripts/build-debug.sh    --(build the debug configuration)
   - ./scripts/build-release.sh  --(build the release configuration)
   - ./scripts/run-debug.sh      --(run the application with debug config)
   - ./scripts/run-release.sh    --(run the application with release config)
-  - ./scripts/clean.sh          --(remove build-debug/ and build-release/) 
+  - ./scripts/run-test.sh       --(run tests)
 

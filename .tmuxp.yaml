@@ -1,13 +1,13 @@
-session_name: ProjectAxisEngine
+session_name: AxisEngine
 windows:
   - window_name: editor-project
     shell_command_before:
-      - cd ~/Developer/BocanOnline/ProjectAxisEngine/
+      - cd ~/Developer/BocanOnline/AxisEngine/
       - nvim
   - window_name: shell
     shell_command_before:
-      - cd ~/Developer/BocanOnline/ProjectAxisEngine/
+      - cd ~/Developer/BocanOnline/AxisEngine/
   - window_name: agent
     shell_command_before:
-      - cd ~/Developer/BocanOnline/ProjectAxisEngine/
+      - cd ~/Developer/BocanOnline/AxisEngine/
       - opencode
