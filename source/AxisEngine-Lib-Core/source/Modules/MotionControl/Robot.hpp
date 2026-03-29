@@ -4,15 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Robot.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <memory>
-#include <vector>
-
-#include "Module.hpp"
 
 #include "Modules/MotionControl/Utils/Types.hpp"
 

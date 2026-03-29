@@ -4,10 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: BlockReceivedEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <string>
 
 #include "BlockReceivedEvent.hpp"
 

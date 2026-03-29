@@ -4,10 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: HaltEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <string>
 
 #include "HaltEvent.hpp"
 

@@ -7,9 +7,6 @@
 // app: AxisEngine-Core
 // file: SimpleShell.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-#include <memory>
-
 
 #include "Events/ConsoleLineReceivedEvent.hpp"
 

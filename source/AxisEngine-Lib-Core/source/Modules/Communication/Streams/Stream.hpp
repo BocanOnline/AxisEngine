@@ -4,12 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Stream.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <string>
 
 namespace Core {
 

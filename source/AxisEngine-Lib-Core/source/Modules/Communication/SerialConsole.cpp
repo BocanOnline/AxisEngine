@@ -7,11 +7,6 @@
 // app: AxisEngine-Core
 // file: SerialConsole.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-
-#include <memory>
-
-#include "Kernel.hpp"
 
 #include "Events/ConsoleLineReceivedEvent.hpp"
 #include "Events/MainLoopEvent.hpp"

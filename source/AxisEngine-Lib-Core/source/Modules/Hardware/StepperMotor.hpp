@@ -4,12 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: StepperMotor.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include "Module.hpp"
 
 #include "Utils/Pin.hpp"
 

@@ -7,10 +7,6 @@
 // app: AxisEngine-Core
 // file: GcodeDispatch.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-#include <memory>
-
-#include "Kernel.hpp"
 
 #include "Events/ConsoleLineReceivedEvent.hpp"
 #include "Events/GcodeReceivedEvent.hpp"

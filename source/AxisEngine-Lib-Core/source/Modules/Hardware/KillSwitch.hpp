@@ -4,11 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: KillSwitch.hpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include "Module.hpp"
 
 namespace Core {
 

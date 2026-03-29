@@ -4,14 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Block.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <vector>
-#include <array>
-#include <bitset>
 
 #include "Types.hpp"
 

@@ -4,12 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Conveyer.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include "Module.hpp"
 
 #include "Modules/MotionControl/Utils/BlockQueue.hpp"
 #include "Modules/MotionControl/Utils/Types.hpp"

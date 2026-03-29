@@ -4,11 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: NetworkStream.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <string>
 
 #include "NetworkStream.hpp"
 

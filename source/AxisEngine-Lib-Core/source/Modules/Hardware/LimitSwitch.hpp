@@ -4,11 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: LimitSwitch.hpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include "Module.hpp"
 
 namespace Core {
 

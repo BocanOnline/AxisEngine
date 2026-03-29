@@ -4,12 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: ConsoleStream.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <iostream>
-#include <string>
 
 #include "ConsoleStream.hpp"
 

@@ -4,13 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Conveyer.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <iostream>
-
-#include "Kernel.hpp"
 
 #include "Events/BlockReceivedEvent.hpp"
 #include "Events/IdleEvent.hpp"

@@ -4,10 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: EnableEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <string>
 
 #include "EnableEvent.hpp"
 

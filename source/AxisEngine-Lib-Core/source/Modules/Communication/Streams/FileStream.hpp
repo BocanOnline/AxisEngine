@@ -4,12 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: FileStream.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <fstream>
 
 #include "Stream.hpp"
 

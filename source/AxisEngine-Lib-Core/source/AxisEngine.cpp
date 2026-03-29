@@ -4,15 +4,11 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: AxisEngine.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
 
 #include "AxisEngine.hpp"
-#include "Kernel.hpp"
-#include "Module.hpp"
-#include "Event.hpp"
 
 namespace AxisEngine {
 

@@ -4,10 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: IdleEvent.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <string>
 
 #include "IdleEvent.hpp"
 

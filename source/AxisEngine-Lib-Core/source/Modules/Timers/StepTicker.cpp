@@ -4,13 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: StepTicker.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-#include <memory>
-
-#include "Kernel.hpp"
 
 #include "Events/IdleEvent.hpp"
 

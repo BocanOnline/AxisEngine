@@ -4,7 +4,7 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Kernel.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -35,11 +35,11 @@ namespace Core {
 
         void Run();
 
-        void AddModule(std::shared_ptr<Module> module);
-        void RegisterForEvent(Event& event, std::function<void(std::shared_ptr<void>)> function);
-        void UnRegisterForEvent(Event& event, std::shared_ptr<Module> module);
-        bool HasEvent(Event& event);
-        void CallEvent(Event& event, std::shared_ptr<void> argument);
+        void AddModule(std::shared_ptr<Core::Module> module);
+        void RegisterForEvent(Core::Event& event, std::function<void(std::shared_ptr<void>)> function);
+        void UnRegisterForEvent(Core::Event& event, std::shared_ptr<Module> module);
+        bool HasEvent(Core::Event& event);
+        void CallEvent(Core::Event& event, std::shared_ptr<void> argument);
 
         bool IsHalted();
         bool GetFeedHold();

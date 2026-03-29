@@ -4,15 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: SecondTickEvent.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <string>
-
-#include "../Event.hpp"
-
 
 namespace Core {
 

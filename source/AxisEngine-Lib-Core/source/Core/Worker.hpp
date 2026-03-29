@@ -4,7 +4,7 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Worker.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once

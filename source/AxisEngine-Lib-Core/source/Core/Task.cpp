@@ -4,6 +4,6 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
-// file: Worker.cpp
+// app: AxisEngine-Lib-Core
+// file: Task.cpp
 ////////////////////////////////////////////////////////////////////////////////

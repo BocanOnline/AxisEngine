@@ -4,13 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Block.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <cmath>
-
-#include "Kernel.hpp"
 
 #include "Block.hpp"
 

@@ -4,12 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: BlockQueue.cpp
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <iostream>
-#include <memory>
 
 #include "Block.hpp"
 #include "BlockQueue.hpp"

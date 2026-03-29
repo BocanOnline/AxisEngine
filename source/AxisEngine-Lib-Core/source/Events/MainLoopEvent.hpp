@@ -4,15 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: MainLoopEvent.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <string>
-
-#include "../Event.hpp"
-
 
 namespace Core {
 

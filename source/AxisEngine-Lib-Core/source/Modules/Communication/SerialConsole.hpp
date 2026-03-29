@@ -9,13 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include <memory>
-
-#include "Module.hpp"
-#include "Worker.hpp"
-
 #include "Streams/Stream.hpp"
-
 
 namespace Core {
 

@@ -4,25 +4,25 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
-// file: Event.hpp
+// app: AxisEngine-Lib-Core
+// file: Task.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include <string>
-
 namespace Core {
 
-    class Event {
+    class Task {
 
     public:
-        Event() {}
-        virtual ~Event() = default;
+        Task() {}
+        virtual ~Task() = default;
         
-        virtual std::string GetName() const = 0;
-    private:
-
-        bool m_Handled = false;
     };
 
 } // namespace Core
+////////////////////////////////////////////////////////////////////////////////
+// TODO
+// [ ]
+// [ ] 
+// [ ] 
+////////////////////////////////////////////////////////////////////////////////

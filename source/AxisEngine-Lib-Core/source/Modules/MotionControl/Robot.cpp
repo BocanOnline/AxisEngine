@@ -4,16 +4,9 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Robot.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-#include <memory>
-#include <array>
-
-#include <cmath>
-
-#include "Kernel.hpp"
 
 #include "Events/BlockReceivedEvent.hpp"
 #include "Events/GcodeReceivedEvent.hpp"

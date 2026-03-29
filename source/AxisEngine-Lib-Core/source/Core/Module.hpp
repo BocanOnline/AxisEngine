@@ -4,7 +4,7 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: Module.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -24,8 +24,7 @@ namespace Core {
         
         virtual void OnModuleLoaded() = 0;
 
-        void RegisterForEvent(Core::Event&, 
-                              std::function<void(std::shared_ptr<void>)> function);
+        void RegisterForEvent(Core::Event&, std::function<void(std::shared_ptr<void>)> function);
 
         virtual void OnMainLoop(std::shared_ptr<void> argument) {}
         virtual void OnConsoleLineReceived(std::shared_ptr<void> argument) {}

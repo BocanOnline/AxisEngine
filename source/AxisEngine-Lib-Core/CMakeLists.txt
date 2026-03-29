@@ -26,6 +26,11 @@ target_include_directories(${LIB_CORE_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/source
 )
 
+target_precompile_headers(${LIB_CORE_NAME}
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/aepch.hpp"
+)
+
 if(BUILD_TESTING AND CORE_TEST_SOURCES)
     message(STATUS "[${LIB_CORE_NAME}]: Configuring unit tests...")
     

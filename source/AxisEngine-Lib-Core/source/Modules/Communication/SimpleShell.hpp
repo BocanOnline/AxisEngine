@@ -9,10 +9,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include <memory>
-
-#include "Module.hpp"
-
 namespace Core {
 
     class SimpleShell : public Module {

@@ -4,15 +4,10 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Core
+// app: AxisEngine-Lib-Core
 // file: SlowTicker.hpp
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include <memory>
-
-#include "Module.hpp"
-#include "Worker.hpp"
 
 namespace Core {
 
