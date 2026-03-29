@@ -45,13 +45,13 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
 
     std::shared_ptr<Core::SerialMessage> message = std::static_pointer_cast<Core::SerialMessage>(argument);
 
-    if(message->message.front() != 'G' && message->message.front() != 'M') {
+    if(message->Message.front() != 'G' && message->Message.front() != 'M') {
 
         std::cout << "[GcodeDispatch.cpp] SerialMessage is not a supported GcodeCommand..." << std::endl;
         return;
     }
 
-    std::string raw_message = message->message;
+    std::string raw_message = message->Message;
     std::shared_ptr<Core::Gcode> gcode = std::make_shared<Core::Gcode>();
 
     std::string::size_type n;

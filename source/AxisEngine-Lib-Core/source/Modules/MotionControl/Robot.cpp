@@ -494,12 +494,12 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     
     if(total_distance > 0.0F) {
     
-        block->nominal_speed = rate;
-        block->nominal_rate = block->steps_event_count * rate / total_distance;
+        block->NominalSpeed = rate;
+        block->NominalRate = block->StepsEventCount * rate / total_distance;
     } else {
 
-        block->nominal_speed = 0.0F;
-        block->nominal_rate = 0;
+        block->NominalSpeed = 0.0F;
+        block->NominalRate = 0;
     }
 
     bool has_steps = false;
@@ -513,9 +513,9 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
             has_steps = true;
         }
         
-        block->direction_bits[i] = (steps < 0) ? 1 : 0;
+        block->DirectionBits[i] = (steps < 0) ? 1 : 0;
 
-        block->steps.at(i) = std::labs(steps);
+        block->Steps.at(i) = std::labs(steps);
     }
 
     if(!has_steps) {
@@ -523,14 +523,14 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
         return false;
     }
 
-    auto mi = std::max_element(block->steps.begin(), block->steps.end());
-    block->steps_event_count = *mi;
+    auto mi = std::max_element(block->Steps.begin(), block->Steps.end());
+    block->StepsEventCount = *mi;
     
-    block->n_actuators = m_NumberOfActuators;
-    block->millimeters = total_distance;
-    block->acceleration = acceleration;
-    block->unit_vector = unit_vector;
-    block->is_g123 = m_IsG123;
+    block->s_NumberOfActuators = m_NumberOfActuators;
+    block->Distance = total_distance;
+    block->Acceleration = acceleration;
+    block->UnitVector = unit_vector;
+    block->IsG123 = m_IsG123;
 
     Core::BlockReceivedEvent on_block_received_event;
     Core::Kernel::Get().CallEvent(on_block_received_event, block);

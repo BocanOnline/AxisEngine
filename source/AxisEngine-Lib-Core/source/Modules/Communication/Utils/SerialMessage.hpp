@@ -19,7 +19,7 @@ namespace Core {
         SerialMessage() = default;
         ~SerialMessage() = default;
 
-        std::string message;
+        std::string Message;
     };
 
 } // namespace Core

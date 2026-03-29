@@ -87,7 +87,7 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
     if(this->HasLine()) {
 
         std::shared_ptr<Core::SerialMessage> message = std::make_shared<Core::SerialMessage>();
-        message->message = m_LineBuffer; 
+        message->Message = m_LineBuffer; 
     
         std::cout << "[SerialConsole.cpp] SerialMessage Received..." << std::endl;
         std::cout << "[SerialConsole.cpp] " << m_LineBuffer << std::endl;

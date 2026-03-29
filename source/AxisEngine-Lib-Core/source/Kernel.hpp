@@ -44,6 +44,8 @@ namespace Core {
         bool IsHalted();
         bool GetFeedHold();
 
+        float GetStepTickerFrequency();
+
     private:
         std::shared_ptr<SerialConsole>          m_SerialConsole;
         std::shared_ptr<GcodeDispatch>          m_GcodeDispatch;

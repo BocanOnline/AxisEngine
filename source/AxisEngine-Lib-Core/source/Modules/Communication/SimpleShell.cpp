@@ -42,7 +42,7 @@ void Core::SimpleShell::OnConsoleLineReceived(std::shared_ptr<void> argument) {
 
     std::shared_ptr<Core::SerialMessage> message = std::static_pointer_cast<Core::SerialMessage>(argument);
 
-    if(message->message.front() != '$') {
+    if(message->Message.front() != '$') {
 
         std::cout << "[SimpleShell.cpp] SerialMessage is not a supported SimpleShell Command..." << std::endl;
         return;

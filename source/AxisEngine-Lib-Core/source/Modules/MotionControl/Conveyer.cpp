@@ -59,9 +59,11 @@ void Core::Conveyer::OnIdle(std::shared_ptr<void> argument) {
     DeleteTailBlock();
 }
         
-void Core::Conveyer::Start(int length) {
+void Core::Conveyer::Start(int n) {
 
-    m_BlockQueue.SetLength(length);
+    Block::Initialize(n);
+    m_BlockQueue.SetLength(m_BlockQueueSize);
+    m_Running = true;
 }
 
 std::shared_ptr<Core::Block> Core::Conveyer::GetPreviousBlock(std::shared_ptr<Core::Block> block) {
@@ -133,11 +135,11 @@ void Core::Conveyer::PlanJunctionVelocity() {
 
     float junction_deviation = m_JunctionDeviation;
 
-    block->primary_axis = true;
-    if(block->steps.at(0) == 0 && block->steps.at(1) == 0) {
+    block->PrimaryAxis = true;
+    if(block->Steps.at(0) == 0 && block->Steps.at(1) == 0) {
         
         // z-axis only move
-        if(block->steps.at(2) != 0) {
+        if(block->Steps.at(2) != 0) {
 
             if(!std::isnan(m_ZJunctionDeviation)) {
 
@@ -147,7 +149,7 @@ void Core::Conveyer::PlanJunctionVelocity() {
         // not a primary axis move
         } else {
             
-            block->primary_axis = false;
+            block->PrimaryAxis = false;
         }
 
     }
@@ -155,21 +157,21 @@ void Core::Conveyer::PlanJunctionVelocity() {
     // calculate max entry speed
     float vmax_junction = m_MinimumPlannerSpeed;
 
-    if(!block->unit_vector.empty() && !m_BlockQueue.IsEmpty()) {
+    if(!block->UnitVector.empty() && !m_BlockQueue.IsEmpty()) {
       
-       float previous_nominal_speed = prev_block->primary_axis ? prev_block->nominal_speed : 0;         
+       float previous_nominal_speed = prev_block->PrimaryAxis ? prev_block->NominalSpeed : 0;         
 
        if(junction_deviation > 0.0F && previous_nominal_speed > 0.0F) {
            
             // compute cosine of angle between previous and current path
-            float cos_theta = - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::X)) * block->unit_vector.at(static_cast<int>(Core::Axis::X))
-                              - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::Y)) * block->unit_vector.at(static_cast<int>(Core::Axis::Y))
-                              - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::Z)) * block->unit_vector.at(static_cast<int>(Core::Axis::Z));
+            float cos_theta = - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::X)) * block->UnitVector.at(static_cast<int>(Core::Axis::X))
+                              - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::Y)) * block->UnitVector.at(static_cast<int>(Core::Axis::Y))
+                              - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::Z)) * block->UnitVector.at(static_cast<int>(Core::Axis::Z));
 
             // zero degree junction; skip and use default max junction speed
             if(cos_theta <= 0.9999F) {
 
-                vmax_junction = std::min(previous_nominal_speed, block->nominal_speed);
+                vmax_junction = std::min(previous_nominal_speed, block->NominalSpeed);
 
                 // 180 degree juntion; skip and avoid divide by zero error
                 if(cos_theta >= -0.9999F) {
@@ -177,34 +179,34 @@ void Core::Conveyer::PlanJunctionVelocity() {
                     // compute maximum junction velocity based on maximum acceleration and junction deviation
                     // trig half identity; always positive
                     float sin_theta_d2 = std::sqrtf(0.5F * (1.0F - cos_theta));
-                    vmax_junction = std::min(vmax_junction, std::sqrtf(block->acceleration * junction_deviation * sin_theta_d2 / (1.0F - sin_theta_d2)));
+                    vmax_junction = std::min(vmax_junction, std::sqrtf(block->Acceleration * junction_deviation * sin_theta_d2 / (1.0F - sin_theta_d2)));
                 }
             }
        }
     }
 
-    block->max_entry_speed = vmax_junction;
+    block->MaxEntrySpeed = vmax_junction;
 
     // calculate entry speed
-    float v_allowable = PlanMaxAllowableSpeed(-block->acceleration, m_MinimumPlannerSpeed, block->millimeters);
-    block->entry_speed = std::min(vmax_junction, v_allowable);
+    float v_allowable = CalculateMaxAllowableSpeed(-block->Acceleration, m_MinimumPlannerSpeed, block->Distance);
+    block->EntrySpeed = std::min(vmax_junction, v_allowable);
 
     // planner efficiency flags
-    if(block->nominal_speed <= v_allowable) {
+    if(block->NominalSpeed <= v_allowable) {
 
-        block->nominal_length_flag = true;
+        block->NominalLengthFlag = true;
     } else {
 
-        block->nominal_length_flag = false;
+        block->NominalLengthFlag = false;
     }
 
     // set recalculate flag
-    block->recalculate_flag = true;
+    block->RecalculateFlag = true;
 
     // update previous_unit_vector and nominal_speed
-    if(!block->unit_vector.empty()) {
+    if(!block->UnitVector.empty()) {
 
-        m_PreviousUnitVector = block->unit_vector;
+        m_PreviousUnitVector = block->UnitVector;
     } else {
 
         m_PreviousUnitVector = { 0.0F, 0.0F, 0.0F };
@@ -223,31 +225,31 @@ void Core::Conveyer::PlanKinematicProfiles() {
     // find maximum entry speed for all blocks in the queue
     float entry_speed = m_MinimumPlannerSpeed;
     if(!m_BlockQueue.IsEmpty()) {  
-        while((i != m_BlockQueue.End()) && curr_block->recalculate_flag) {
+        while((i != m_BlockQueue.End()) && curr_block->RecalculateFlag) {
             
-            entry_speed = curr_block->ReversePass(entry_speed);
+            entry_speed = curr_block->CalculateReversePass(entry_speed);
             curr_block = GetPreviousBlock(curr_block);
             i++;
         }
     }
 
     // find maximum exit speed and calculate trapezoid
-    float exit_speed = curr_block->max_exit_speed;
+    float exit_speed = curr_block->MaxEntrySpeed;
     while(i != m_BlockQueue.Begin()) {
         prev_block = curr_block;
         curr_block = GetNextBlock(curr_block);
         i--;
 
-        exit_speed = curr_block->ForwardPass(exit_speed);
-        prev_block->CalculateTrapezoid(prev_block->entry_speed, curr_block->entry_speed);
+        exit_speed = curr_block->CalculateForwardPass(exit_speed);
+        prev_block->CalculateTrapezoid(prev_block->EntrySpeed, curr_block->EntrySpeed);
     }
 
     // calculate trapezoid for HeadBlock (newest in the queue)
-    curr_block->CalculateTrapezoid(curr_block->entry_speed, m_MinimumPlannerSpeed);
+    curr_block->CalculateTrapezoid(curr_block->EntrySpeed, m_MinimumPlannerSpeed);
 
 }
 
-float Core::Conveyer::PlanMaxAllowableSpeed(float acceleration, float target_velocity, float distance) {
+float Core::Conveyer::CalculateMaxAllowableSpeed(float acceleration, float target_velocity, float distance) {
 
     return std::sqrtf(target_velocity * target_velocity - 2.0F * acceleration * distance);
 }

@@ -46,7 +46,8 @@ namespace Core {
         // Planner functions
         void  PlanJunctionVelocity();
         void  PlanKinematicProfiles();
-        float PlanMaxAllowableSpeed(float, float, float);
+
+        float CalculateMaxAllowableSpeed(float, float, float);
 
     private:
         Core::BlockQueue m_BlockQueue;
