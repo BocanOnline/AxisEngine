@@ -34,6 +34,8 @@ namespace Core {
         virtual void OnGcodeReceived(std::shared_ptr<void> argument) override;
         virtual void OnSecondTick(std::shared_ptr<void> argument) override;
 
+        int GetNumberRegisteredMotors();
+
     public:
         struct {
             bool m_InchMode: 1;
@@ -81,6 +83,7 @@ namespace Core {
             float m_GlobalMaxSpeed;
             int   m_NumberOfActuators;
             int   m_ArcCorrections;
+            float m_PreviousUnitVector[static_cast<int>(Core::Axis::MaxPositionAxes)];
             std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_AxisMaxSpeed;
             std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_SoftEndstopMin;
             std::array<float, static_cast<int>(Core::Axis::MaxPositionAxes)> m_SoftEndstopMax;

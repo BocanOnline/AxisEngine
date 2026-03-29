@@ -31,10 +31,8 @@ Core::SimpleShell::~SimpleShell() {
 void Core::SimpleShell::OnModuleLoaded() {
 
     Core::ConsoleLineReceivedEvent on_console_line_received_event;
-    auto on_console_line_received_function = [this](std::shared_ptr<void> argument)
-                                { this->Core::SimpleShell::OnConsoleLineReceived(argument); };
+    auto on_console_line_received_function = [this](std::shared_ptr<void> argument){ this->Core::SimpleShell::OnConsoleLineReceived(argument); };
     this->RegisterForEvent(on_console_line_received_event, on_console_line_received_function);
-
     std::cout << "[SimpleShell.cpp] SimpleShell registered for ConsoleLineReceivedEvent..." << std::endl;
 }
 

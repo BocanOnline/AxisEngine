@@ -11,4 +11,19 @@
 #include "Block.hpp"
 
 
-void Core::Block::MakeReady() {}
+void Core::Block::MakeReady() {
+
+}
+
+float Core::Block::ReversePass(float) {
+
+    
+}
+
+float Core::Block::ForwardPass(float) {
+
+}
+
+void Core::Block::CalculateTrapezoid(float, float) {
+
+}

@@ -170,6 +170,11 @@ void Core::Robot::OnSecondTick(std::shared_ptr<void> argument) {
 
     std::cout << "[Robot.cpp] Robot called by SecondTickEvent..." << std::endl;
 }
+        
+int Core::Robot::GetNumberRegisteredMotors() {
+
+    return m_NumberOfActuators;
+}
 
 void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMode motion_mode) {
     
@@ -483,15 +488,9 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     }
     */
 
-    // AxisEngine Way: create block and call OnBlockReady for Planner to grab and complete
+    // AxisEngine Way: create block and call OnBlockReceived for Conveyer to grab and complete
     // acceleration and velocity computation
     std::shared_ptr<Core::Block> block = std::make_shared<Core::Block>();
-    
-    block->n_actuators = m_NumberOfActuators;
-    block->millimeters = total_distance;
-    block->acceleration = acceleration;
-    block->unit_vector = unit_vector;
-    block->is_g123 = m_IsG123;
     
     if(total_distance > 0.0F) {
     
@@ -514,7 +513,7 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
             has_steps = true;
         }
         
-        block->steps.at(i) = (steps < 0) ? 1 : 0;
+        block->direction_bits[i] = (steps < 0) ? 1 : 0;
 
         block->steps.at(i) = std::labs(steps);
     }
@@ -524,15 +523,14 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
         return false;
     }
 
-    block->primary_axis = true;
-    if(block->steps.at(0) == 0 && block->steps.at(1) == 0) {
-        
-        // z-axis only move
-        if(block->steps.at(2) != 0) {
-
-        }
-
-    }
+    auto mi = std::max_element(block->steps.begin(), block->steps.end());
+    block->steps_event_count = *mi;
+    
+    block->n_actuators = m_NumberOfActuators;
+    block->millimeters = total_distance;
+    block->acceleration = acceleration;
+    block->unit_vector = unit_vector;
+    block->is_g123 = m_IsG123;
 
     Core::BlockReceivedEvent on_block_received_event;
     Core::Kernel::Get().CallEvent(on_block_received_event, block);

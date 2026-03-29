@@ -20,7 +20,9 @@
 #include "Module.hpp"
 #include "Modules/Communication/SerialConsole.hpp"
 #include "Modules/Communication/GcodeDispatch.hpp"
+#include "Modules/Communication/SimpleShell.hpp"
 #include "Modules/MotionControl/Robot.hpp"
+#include "Modules/MotionControl/Conveyer.hpp"
 #include "Modules/Timers/SlowTicker.hpp"
 #include "Modules/Timers/StepTicker.hpp"
 
@@ -33,13 +35,17 @@ Core::Kernel::Kernel() {
    
     m_SerialConsole = std::make_shared<SerialConsole>();
     m_GcodeDispatch = std::make_shared<GcodeDispatch>();
+    m_SimpleShell   = std::make_shared<SimpleShell>();
     m_Robot         = std::make_shared<Robot>();
+    m_Conveyer      = std::make_shared<Conveyer>();
     m_SlowTicker    = std::make_shared<SlowTicker>();
     m_StepTicker    = std::make_shared<StepTicker>();
    
     Core::Kernel::AddModule(m_SerialConsole);
     Core::Kernel::AddModule(m_GcodeDispatch);
+    Core::Kernel::AddModule(m_SimpleShell);
     Core::Kernel::AddModule(m_Robot);
+    Core::Kernel::AddModule(m_Conveyer);
     Core::Kernel::AddModule(m_SlowTicker);
     Core::Kernel::AddModule(m_StepTicker);
     std::cout << "[Kernel.cpp] Kernel constructor end..." << std::endl; 
@@ -58,6 +64,8 @@ Core::Kernel::~Kernel() {
 }
 
 void Core::Kernel::Run() {
+
+    m_Conveyer->Start(m_Robot->GetNumberRegisteredMotors());
 
     while(!m_SerialConsole->ReceivedExitCommand()) {
 
