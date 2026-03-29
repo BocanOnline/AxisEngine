@@ -119,3 +119,8 @@ void Core::Kernel::CallEvent(Event& event, std::shared_ptr<void> argument) {
         function(argument); 
     }        
 }
+
+float Core::Kernel::GetStepTickerFrequency() {
+
+    return m_StepTicker->GetFrequency();
+}

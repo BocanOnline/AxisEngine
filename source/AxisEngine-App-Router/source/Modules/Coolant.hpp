@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include <memory>
 
-#include "Module.hpp"
+#include "Core/Module.hpp"
 
 namespace Router::Module {
 

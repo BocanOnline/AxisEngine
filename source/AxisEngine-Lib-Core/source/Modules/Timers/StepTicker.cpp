@@ -41,3 +41,4 @@ void Core::StepTicker::OnIdle(std::shared_ptr<void> argument) {
 void Core::StepTicker::RegisterForTask() {}
 void Core::StepTicker::Run() {}
 void Core::StepTicker::UnregisterForTask() {}
+

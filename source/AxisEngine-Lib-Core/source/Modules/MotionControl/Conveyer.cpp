@@ -13,6 +13,7 @@
 
 #include "Conveyer.hpp"
 
+static int debug_counter = 0;
 
 Core::Conveyer::Conveyer() {
 
@@ -34,11 +35,13 @@ void Core::Conveyer::OnModuleLoaded() {
     this->RegisterForEvent(on_block_received_event, on_block_received_function);
     std::cout << "[Conveyer.cpp] Conveyer registered for BlockReceivedEvent..." << std::endl;
 
-    m_BlockQueueSize = 32;
+    m_BlockQueueSize = 5;
     m_BlockQueueDelayTime = 100;
 }
 
 void Core::Conveyer::OnBlockReceived(std::shared_ptr<void> argument) {
+    
+    std::cout << "[Conveyer.cpp] Conveyer called by BlockReceivedEvent..." << std::endl; 
 
     std::shared_ptr<Core::Block> block = std::static_pointer_cast<Core::Block>(argument);
 
@@ -51,11 +54,23 @@ void Core::Conveyer::OnBlockReceived(std::shared_ptr<void> argument) {
 }
 
 void Core::Conveyer::OnIdle(std::shared_ptr<void> argument) {
+    
+    std::cout << "[Conveyer.cpp] Conveyer called by IdleEvent..." << std::endl; 
 
     DeleteTailBlock();
+
+    // debug
+    debug_counter++;
+    if(debug_counter > 10) {
+        
+        m_BlockQueue.IncrementMarkIndex();
+        m_BlockQueue.IncrementMarkIndex();
+    }
 }
         
 void Core::Conveyer::Start(int n) {
+    
+    std::cout << "[Conveyer.cpp] Conveyer started..." << std::endl; 
 
     Block::Initialize(n);
     m_BlockQueue.SetLength(m_BlockQueueSize);
@@ -93,14 +108,18 @@ std::shared_ptr<Core::Block> Core::Conveyer::GetNextBlock(std::shared_ptr<Core::
 }
         
 void Core::Conveyer::AppendHeadBlock(std::shared_ptr<Core::Block> block) {
-    
+
     while(m_BlockQueue.IsFull() && !Core::Kernel::Get().IsHalted()) {
+        
+        std::cout << "[Conveyer.cpp] BlockQueue full..." << std::endl; 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         Core::IdleEvent on_idle_event; 
         Core::Kernel::Get().CallEvent(on_idle_event, nullptr);
     }
 
     m_BlockQueue.PushBlock(block);
+    std::cout << "[Conveyer.cpp] Head Block added to queue..." << std::endl; 
 
 }
 
@@ -120,6 +139,8 @@ void Core::Conveyer::DeleteTailBlock() {
     if(m_BlockQueue.HasConsumedBlock()) {
 
         m_BlockQueue.PopBlock();
+        m_BlockQueue.IncrementTailIndex();
+        std::cout << "[Conveyer.cpp] Tail Block deleted from queue..." << std::endl; 
     }
 }
 
@@ -133,7 +154,7 @@ void Core::Conveyer::PlanJunctionVelocity() {
 
     block->PrimaryAxis = true;
     if(block->Steps.at(0) == 0 && block->Steps.at(1) == 0) {
-        
+    
         // z-axis only move
         if(block->Steps.at(2) != 0) {
 
@@ -154,11 +175,20 @@ void Core::Conveyer::PlanJunctionVelocity() {
     float vmax_junction = m_MinimumPlannerSpeed;
 
     if(!block->UnitVector.empty() && !m_BlockQueue.IsEmpty()) {
-      
-       float previous_nominal_speed = prev_block->PrimaryAxis ? prev_block->NominalSpeed : 0;         
+            
+        float previous_nominal_speed;
 
-       if(junction_deviation > 0.0F && previous_nominal_speed > 0.0F) {
-           
+        if(prev_block != nullptr && prev_block->PrimaryAxis) {
+
+            previous_nominal_speed = prev_block->NominalSpeed;
+        } else {
+
+            previous_nominal_speed = 0;
+        }
+        
+        if(junction_deviation > 0.0F && previous_nominal_speed > 0.0F) {
+        
+        
             // compute cosine of angle between previous and current path
             float cos_theta = - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::X)) * block->UnitVector.at(static_cast<int>(Core::Axis::X))
                               - m_PreviousUnitVector.at(static_cast<int>(Core::Axis::Y)) * block->UnitVector.at(static_cast<int>(Core::Axis::Y))
@@ -208,6 +238,7 @@ void Core::Conveyer::PlanJunctionVelocity() {
         m_PreviousUnitVector = { 0.0F, 0.0F, 0.0F };
     }
 
+    std::cout << "[Conveyer.cpp] Plan Junction Velocity complete..." << std::endl; 
 }
 
 void Core::Conveyer::PlanKinematicProfiles() {
@@ -224,8 +255,14 @@ void Core::Conveyer::PlanKinematicProfiles() {
         while((i != m_BlockQueue.End()) && curr_block->RecalculateFlag) {
             
             entry_speed = curr_block->CalculateReversePass(entry_speed);
-            curr_block = GetPreviousBlock(curr_block);
-            i++;
+
+            if(GetPreviousBlock(curr_block) != nullptr) {
+                curr_block = GetPreviousBlock(curr_block); 
+                i++;
+            } else {
+
+                break;
+            }
         }
     }
 
@@ -242,7 +279,9 @@ void Core::Conveyer::PlanKinematicProfiles() {
 
     // calculate trapezoid for HeadBlock (newest in the queue)
     curr_block->CalculateTrapezoid(curr_block->EntrySpeed, m_MinimumPlannerSpeed);
-
+    
+    std::cout << "[Block.cpp] Block ready for StepTicker..." << std::endl; 
+    std::cout << "[Conveyer.cpp] Plan Kinematic Profiles complete..." << std::endl; 
 }
 
 float Core::Conveyer::CalculateMaxAllowableSpeed(float acceleration, float target_velocity, float distance) {

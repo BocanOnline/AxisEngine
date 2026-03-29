@@ -151,6 +151,7 @@ void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
         }
     }
     if(motion_mode != Core::MotionMode::None) {
+        std::cout << "[Robot.cpp] Processing move..." << std::endl; 
         ProcessMove(gcode, motion_mode);
     } else {  
         m_IsG123 = false;
@@ -235,9 +236,11 @@ void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMo
     bool moved = false;
     switch(motion_mode) {
         case Core::MotionMode::Seek:
+            std::cout << "[Robot.cpp] Appending line..." << std::endl; 
             moved = AppendLine(gcode, target_position, m_SeekRate / m_SecondsPerMinute);
             break;
         case Core::MotionMode::Linear:
+            std::cout << "[Robot.cpp] Appending line..." << std::endl; 
             moved = AppendLine(gcode, target_position, m_FeedRate / m_SecondsPerMinute);
             break;
         case Core::MotionMode::ClockwiseArc:
@@ -325,8 +328,10 @@ bool Core::Robot::AppendLine(std::shared_ptr<Core::Gcode> gcode, Core::Cartesian
     }
 
     // append end of each section to the queue, call append_milestone 
+    std::cout << "[Robot.cpp] Appending milestone..." << std::endl; 
     if(AppendMilestone(target_position, rate)) {
         moved = true;
+        std::cout << "[Robot.cpp] Append milestone succeeded..." << std::endl; 
     }
     m_NextCommandIsMCS = false;
 
@@ -376,8 +381,9 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
         }
     }
 
-    if(!moved)
+    if(!moved) {
         return false;
+    }
 
     // determine if this is a primary axis move
     bool auxillary_move = true;
@@ -394,8 +400,9 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     float total_distance = auxillary_move ? 0 : std::sqrtf(sum_of_squares);
 
     // catch divide by zero errors
-    if(!auxillary_move && total_distance < 0.0000F)
+    if(!auxillary_move && total_distance < 0.0000F) {
         return false;
+    }
 
     // catch rate exceeds configured max speeds
     if(!auxillary_move) {
@@ -512,7 +519,6 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     }
 
     if(!has_steps) {
-
         return false;
     }
 
@@ -524,6 +530,8 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     block->Acceleration = acceleration;
     block->UnitVector = unit_vector;
     block->IsG123 = m_IsG123;
+    
+    std::cout << "[Robot.cpp] Block created..." << std::endl; 
 
     Core::BlockReceivedEvent on_block_received_event;
     Core::Kernel::Get().CallEvent(on_block_received_event, block);

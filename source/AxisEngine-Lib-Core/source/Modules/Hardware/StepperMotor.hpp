@@ -18,8 +18,11 @@ namespace Core {
     public:
         StepperMotor(const Pin&, const Pin&, const Pin&);
         ~StepperMotor();
-       
-        virtual void OnModuleLoaded() override;
+
+        virtual void OnModuleLoaded();
+
+        virtual void OnHalt(std::shared_ptr<void> argument);
+        virtual void OnEnable(std::shared_ptr<void> argument);
 
         void ChangeStepsPerMillimeter(float);
         void ChangeLastMilestone(float);
@@ -49,7 +52,7 @@ namespace Core {
         float m_Acceleration;
 
         volatile struct {
-            bool selected: 1;
+            bool m_Selected: 1;
         };
         
     };

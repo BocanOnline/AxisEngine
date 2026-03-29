@@ -10,8 +10,6 @@
 #include <iostream>
 #include <memory>
 
-#include "AxisEngine.hpp"
-
 #include "../Events/TemperatureUnsafeEvent.hpp"
 #include "Coolant.hpp"
 

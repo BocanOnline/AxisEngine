@@ -41,8 +41,8 @@ namespace Core {
         bool HasEvent(Core::Event& event);
         void CallEvent(Core::Event& event, std::shared_ptr<void> argument);
 
-        bool IsHalted();
-        bool GetFeedHold();
+        bool IsHalted()    { return m_IsHalted; }
+        bool GetFeedHold() { return m_FeedHold; }
 
         float GetStepTickerFrequency();
 
@@ -66,6 +66,11 @@ namespace Core {
 
         std::unordered_map<std::string, 
                  std::vector<std::function<void(std::shared_ptr<void>)>>> m_CallbackTable;
+
+        struct {
+            bool m_IsHalted: 1;   
+            bool m_FeedHold: 1;
+        };
     };
 
 } // namespace Core
@@ -73,7 +78,9 @@ namespace Core {
 // TODO
 // [ ] add config file input and parsing (Configurator Class?)
 // [ ] add multi-threading (goal: Kernel controls threads for application)
+// [ ] add sophisticated benchmarking
 // [ ] add sophisticated logging (goal: Kernel controls logging streams)
-// [ ] implement IsHalted and GetFeedHold
 // [ ] add private config data
+// [ ] add hooks to view status of Pins to determine output
+// [ ] change int types to uint32_t style types 
 ////////////////////////////////////////////////////////////////////////////////
