@@ -1,5 +1,9 @@
 ## Bocan Online Defaults
 
+# Local Development Environment
+.bocan.workspace/
+.opencode/
+
 # CMake Build Files and Directories
 build/
 build-debug/
