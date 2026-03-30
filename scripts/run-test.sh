@@ -6,4 +6,4 @@ project_root="$(cd "${script_dir}/.." && pwd)"
 
 cd "$project_root"
 
-ctest --test-dir build-debug "$@"
+ctest --test-dir build/debug/ "$@"
