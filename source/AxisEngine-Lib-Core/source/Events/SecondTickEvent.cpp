@@ -16,5 +16,5 @@ Core::SecondTickEvent::~SecondTickEvent() {}
 
 std::string Core::SecondTickEvent::GetName() const {
 
-    return "SECOND_TICK";
+    return "OnSecondTick";
 }

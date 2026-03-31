@@ -15,12 +15,12 @@
 
 Core::SlowTicker::SlowTicker() {
 
-    std::cout << "[SlowTicker.cpp] SlowTicker created..." << std::endl;
+    AXIS_CORE_TRACE("SlowTicker constructed");
 }
 
 Core::SlowTicker::~SlowTicker() {
 
-    std::cout << "[SlowTicker.cpp] SlowTicker destroyed..." << std::endl;
+    AXIS_CORE_TRACE("SlowTicker destroyed");
 }
     
 void Core::SlowTicker::OnModuleLoaded() {
@@ -30,12 +30,17 @@ void Core::SlowTicker::OnModuleLoaded() {
                                 { this->Core::SlowTicker::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function);
     
-    std::cout << "[SlowTicker.cpp] SlowTicker registered for IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("SlowTicker registered for OnIdle");
+}
+
+std::string Core::SlowTicker::GetName() const {
+
+    return "SlowTicker";
 }
 
 void Core::SlowTicker::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[SlowTicker.cpp] SlowTicker called by IdleEvent..." << std::endl; 
+    AXIS_CORE_TRACE("SlowTicker called by OnIdle");
 }
 
 void Core::SlowTicker::RegisterForTask() {}

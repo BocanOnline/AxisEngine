@@ -16,5 +16,5 @@ Core::BlockReceivedEvent::~BlockReceivedEvent() {}
 
 std::string Core::BlockReceivedEvent::GetName() const {
 
-    return "BLOCK_RECEIVED";
+    return "OnBlockReceived";
 }

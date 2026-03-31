@@ -21,9 +21,18 @@ add_library(${LIB_CORE_NAME} STATIC
     ${CORE_MODULE_SOURCES}
 )
 
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
+
+add_subdirectory(vendor/spdlog)
+
 target_include_directories(${LIB_CORE_NAME}
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/source
+)
+
+target_link_libraries(${LIB_CORE_NAME}
+    PRIVATE
+        spdlog::spdlog
 )
 
 target_precompile_headers(${LIB_CORE_NAME}

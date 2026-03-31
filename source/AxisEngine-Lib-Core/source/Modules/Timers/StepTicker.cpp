@@ -15,12 +15,12 @@
 
 Core::StepTicker::StepTicker() {
 
-    std::cout << "[StepTicker.cpp] StepTicker created..." << std::endl;
+    AXIS_CORE_TRACE("StepTicker constructed");
 }
 
 Core::StepTicker::~StepTicker() {
 
-    std::cout << "[StepTicker.cpp] StepTicker destroyed..." << std::endl;
+    AXIS_CORE_TRACE("StepTicker destroyed");
 }
     
 void Core::StepTicker::OnModuleLoaded() {
@@ -30,12 +30,17 @@ void Core::StepTicker::OnModuleLoaded() {
                                 { this->Core::StepTicker::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function);
     
-    std::cout << "[StepTicker.cpp] StepTicker registered for IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("StepTicker registered for OnIdle");
+}
+
+std::string Core::StepTicker::GetName() const {
+
+    return "StepTicker";
 }
 
 void Core::StepTicker::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[StepTicker.cpp] StepTicker called by IdleEvent..." << std::endl; 
+    AXIS_CORE_TRACE("StepTicker called by OnIdle");
 }
 
 void Core::StepTicker::RegisterForTask() {}

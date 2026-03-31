@@ -16,5 +16,5 @@ Core::HaltEvent::~HaltEvent() {}
 
 std::string Core::HaltEvent::GetName() const {
 
-    return "HALT";
+    return "OnHalt";
 }

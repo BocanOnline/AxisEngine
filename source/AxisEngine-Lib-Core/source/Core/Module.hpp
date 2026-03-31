@@ -23,6 +23,7 @@ namespace Core {
         virtual ~Module() = default;
         
         virtual void OnModuleLoaded() = 0;
+        virtual std::string GetName() const = 0;
 
         void RegisterForEvent(Core::Event&, std::function<void(std::shared_ptr<void>)> function);
 

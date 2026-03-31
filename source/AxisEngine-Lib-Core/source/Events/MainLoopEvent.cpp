@@ -16,5 +16,5 @@ Core::MainLoopEvent::~MainLoopEvent() {}
 
 std::string Core::MainLoopEvent::GetName() const {
 
-    return "MAIN_LOOP";
+    return "OnMainLoop";
 }

@@ -18,6 +18,7 @@ namespace Core {
         virtual ~GcodeDispatch() override;
         
         virtual void OnModuleLoaded() override;
+        virtual std::string GetName() const override;
 
         virtual void OnConsoleLineReceived(std::shared_ptr<void> argument) override;
     };

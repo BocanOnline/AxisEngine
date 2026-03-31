@@ -55,7 +55,7 @@ Core::Block::Block() {
 
 void Core::Block::Initialize(int n) {
 
-    std::cout << "[Block.cpp] Block initialized..." << std::endl; 
+    AXIS_CORE_TRACE("Block initialized");
 
     s_NumberOfActuators = n;
     s_FloatingPointScale = static_cast<double>(1LL<<62) / std::pow(static_cast<double>(Core::Kernel::Get().GetStepTickerFrequency()), 2.0);

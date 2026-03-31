@@ -80,7 +80,8 @@ void Core::BlockQueue::PushBlock(std::shared_ptr<Core::Block> block) {
     // blockqueue has not been initialized; 'should' never happen
     if(m_HeadIndex < 0) {
 
-        std::cout << "[BlockQueue.cpp] BlockQueue is not initialized..." << std::endl;
+        AXIS_CORE_TRACE("BlockQueue is not initialized");
+    
         return;
     }
 

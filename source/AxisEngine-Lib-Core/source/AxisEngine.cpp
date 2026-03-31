@@ -28,12 +28,12 @@ namespace AxisEngine {
 
 int main(int argc, char** argv) {
 
-    std::cout << "[AxisEngine.hpp] Start of main function..." << std::endl;
+    AXIS_CORE_TRACE("Start of Main function");
     
     AxisEngine::Initialize();
 
     AxisEngine::Run();
     
-    std::cout << "[AxisEngine.hpp] End of main function..." << std::endl;
+    AXIS_CORE_TRACE("End of Main function");
     return 0;
 }

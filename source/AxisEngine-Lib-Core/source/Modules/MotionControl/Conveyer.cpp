@@ -17,10 +17,12 @@ static int debug_counter = 0;
 
 Core::Conveyer::Conveyer() {
 
+    AXIS_CORE_TRACE("Conveyer constructed");
 }
 
 Core::Conveyer::~Conveyer() {
 
+    AXIS_CORE_TRACE("Conveyer destroyed");
 }
 
 void Core::Conveyer::OnModuleLoaded() {
@@ -28,20 +30,25 @@ void Core::Conveyer::OnModuleLoaded() {
     Core::IdleEvent on_idle_event;
     auto on_idle_function = [this](std::shared_ptr<void> argument){ this->Core::Conveyer::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function);
-    std::cout << "[Conveyer.cpp] Conveyer registered for IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("Conveyer registered for OnIdle");
     
     Core::BlockReceivedEvent on_block_received_event;
     auto on_block_received_function = [this](std::shared_ptr<void> argument){ this->Core::Conveyer::OnBlockReceived(argument); };
     this->RegisterForEvent(on_block_received_event, on_block_received_function);
-    std::cout << "[Conveyer.cpp] Conveyer registered for BlockReceivedEvent..." << std::endl;
+    AXIS_CORE_TRACE("Conveyer registered for OnBlockReceived");
 
     m_BlockQueueSize = 5;
     m_BlockQueueDelayTime = 100;
 }
 
+std::string Core::Conveyer::GetName() const {
+
+    return "Conveyer";
+}
+
 void Core::Conveyer::OnBlockReceived(std::shared_ptr<void> argument) {
     
-    std::cout << "[Conveyer.cpp] Conveyer called by BlockReceivedEvent..." << std::endl; 
+    AXIS_CORE_TRACE("Conveyer called by OnBlockReceived");
 
     std::shared_ptr<Core::Block> block = std::static_pointer_cast<Core::Block>(argument);
 
@@ -55,7 +62,7 @@ void Core::Conveyer::OnBlockReceived(std::shared_ptr<void> argument) {
 
 void Core::Conveyer::OnIdle(std::shared_ptr<void> argument) {
     
-    std::cout << "[Conveyer.cpp] Conveyer called by IdleEvent..." << std::endl; 
+    AXIS_CORE_TRACE("Conveyer called by OnIdle");
 
     DeleteTailBlock();
 
@@ -70,7 +77,7 @@ void Core::Conveyer::OnIdle(std::shared_ptr<void> argument) {
         
 void Core::Conveyer::Start(int n) {
     
-    std::cout << "[Conveyer.cpp] Conveyer started..." << std::endl; 
+    AXIS_CORE_TRACE("Conveyer started");
 
     Block::Initialize(n);
     m_BlockQueue.SetLength(m_BlockQueueSize);
@@ -111,7 +118,7 @@ void Core::Conveyer::AppendHeadBlock(std::shared_ptr<Core::Block> block) {
 
     while(m_BlockQueue.IsFull() && !Core::Kernel::Get().IsHalted()) {
         
-        std::cout << "[Conveyer.cpp] BlockQueue full..." << std::endl; 
+        AXIS_CORE_TRACE("BlockQueue is full");
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         Core::IdleEvent on_idle_event; 
@@ -119,7 +126,7 @@ void Core::Conveyer::AppendHeadBlock(std::shared_ptr<Core::Block> block) {
     }
 
     m_BlockQueue.PushBlock(block);
-    std::cout << "[Conveyer.cpp] Head Block added to queue..." << std::endl; 
+    AXIS_CORE_TRACE("Block added to BlockQueue at Head");
 
 }
 
@@ -140,7 +147,7 @@ void Core::Conveyer::DeleteTailBlock() {
 
         m_BlockQueue.PopBlock();
         m_BlockQueue.IncrementTailIndex();
-        std::cout << "[Conveyer.cpp] Tail Block deleted from queue..." << std::endl; 
+        AXIS_CORE_TRACE("Block deleted from BlockQueue at Tail");
     }
 }
 
@@ -238,7 +245,7 @@ void Core::Conveyer::PlanJunctionVelocity() {
         m_PreviousUnitVector = { 0.0F, 0.0F, 0.0F };
     }
 
-    std::cout << "[Conveyer.cpp] Plan Junction Velocity complete..." << std::endl; 
+    AXIS_CORE_TRACE("Plan Junction Deviation complete");
 }
 
 void Core::Conveyer::PlanKinematicProfiles() {
@@ -280,8 +287,8 @@ void Core::Conveyer::PlanKinematicProfiles() {
     // calculate trapezoid for HeadBlock (newest in the queue)
     curr_block->CalculateTrapezoid(curr_block->EntrySpeed, m_MinimumPlannerSpeed);
     
-    std::cout << "[Block.cpp] Block ready for StepTicker..." << std::endl; 
-    std::cout << "[Conveyer.cpp] Plan Kinematic Profiles complete..." << std::endl; 
+    AXIS_CORE_TRACE("Plan Kinematic Profiles complete");
+    AXIS_CORE_TRACE("Block ready for StepTicker");
 }
 
 float Core::Conveyer::CalculateMaxAllowableSpeed(float acceleration, float target_velocity, float distance) {

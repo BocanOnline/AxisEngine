@@ -16,5 +16,5 @@ Core::ConsoleLineReceivedEvent::~ConsoleLineReceivedEvent() {}
 
 std::string Core::ConsoleLineReceivedEvent::GetName() const {
 
-    return "CONSOLE_LINE_RECEIVED";
+    return "OnConsoleLineReceived";
 }

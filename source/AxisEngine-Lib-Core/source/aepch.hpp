@@ -33,3 +33,5 @@
 #include "Core/Task.hpp"
 #include "Core/Tool.hpp"
 #include "Core/Worker.hpp"
+
+#include "Debug/Logger.hpp"

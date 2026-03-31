@@ -23,6 +23,11 @@ void Core::StepperMotor::OnModuleLoaded() {
 
 }
 
+std::string Core::StepperMotor::GetName() const {
+
+    return "StepperMotor";
+}
+
 void Core::StepperMotor::OnHalt(std::shared_ptr<void> argument) {
 
 }

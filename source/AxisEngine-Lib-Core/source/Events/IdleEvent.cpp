@@ -16,5 +16,5 @@ Core::IdleEvent::~IdleEvent() {}
 
 std::string Core::IdleEvent::GetName() const {
 
-    return "IDLE";
+    return "OnIdle";
 }

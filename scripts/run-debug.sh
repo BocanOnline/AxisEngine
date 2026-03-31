@@ -24,14 +24,17 @@ case "$app" in
     router)
         exec "./build/debug/source/AxisEngine-App-Router/AxisEngine-App-Router"   "${@:2}"
         ;;
+    test)
+        exec "./build/debug/source/AxisEngine-App-Test/AxisEngine-App-Test"     "${@:2}"
+        ;;
     "")
         echo "Usage: $0 <app> [args...]"
-        echo "Available apps: laser picker plotter printer router"
+        echo "Available apps: laser picker plotter printer router test"
         exit 1
         ;;
     *)
         echo "Error: Unknown app '$app'"
-        echo "Available apps: laser picker plotter printer router"
+        echo "Available apps: laser picker plotter printer router test"
         exit 1
         ;;
 esac

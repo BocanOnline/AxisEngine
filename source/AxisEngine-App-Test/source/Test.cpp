@@ -4,17 +4,13 @@
 //
 // license: The Unlicense
 // project: AxisEngine
-// app: AxisEngine-Lib-Core
-// file: EnableEvent.cpp
+// app: AxisEngine-App-Test
+// file: Test.cpp
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "EnableEvent.hpp"
+// Core Functionality
+#include "AxisEngine.hpp"
 
-Core::EnableEvent::EnableEvent() {}
+// User Added Functionality
 
-Core::EnableEvent::~EnableEvent() {}
-
-std::string Core::EnableEvent::GetName() const {
-
-    return "OnEnable";
-}
+void AxisEngine::Initialize() {}

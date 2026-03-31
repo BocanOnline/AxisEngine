@@ -7,12 +7,13 @@
 // app: AxisEngine-Lib-Core
 // file: Kernel.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include <iostream>
 #include <unordered_map>
 #include <thread>
 #include <chrono>
 
 #include "Kernel.hpp"
+
+#include "Debug/Logger.hpp"
 
 #include "Events/IdleEvent.hpp"
 #include "Events/MainLoopEvent.hpp"
@@ -29,10 +30,12 @@
 Core::Kernel Core::Kernel::s_Instance;
 
 Core::Kernel::Kernel() {
-   
-    std::cout << "[Kernel.cpp] Kernel created..." << std::endl; 
-    std::cout << "[Kernel.cpp] Kernel constructor start..." << std::endl;
-   
+  
+    Core::Logger::Initialize();
+
+    AXIS_CORE_TRACE("Kernel constructed");
+    AXIS_CORE_TRACE("Kernel constructor start");
+
     m_SerialConsole = std::make_shared<SerialConsole>();
     m_GcodeDispatch = std::make_shared<GcodeDispatch>();
     m_SimpleShell   = std::make_shared<SimpleShell>();
@@ -48,7 +51,8 @@ Core::Kernel::Kernel() {
     Core::Kernel::AddModule(m_Conveyer);
     Core::Kernel::AddModule(m_SlowTicker);
     Core::Kernel::AddModule(m_StepTicker);
-    std::cout << "[Kernel.cpp] Kernel constructor end..." << std::endl; 
+
+    AXIS_CORE_TRACE("Kernel constructor end");
 
 //    after these below function calls are implemented, I may move them to
 //    the start of Run() to allow time to load the user modules before starting
@@ -60,7 +64,7 @@ Core::Kernel::Kernel() {
 
 Core::Kernel::~Kernel() {
     
-    std::cout << "[Kernel.cpp] Kernel destroyed..." << std::endl;
+    AXIS_CORE_TRACE("Kernel destroyed");
 }
 
 void Core::Kernel::Run() {
@@ -81,16 +85,15 @@ void Core::Kernel::Run() {
 
 void Core::Kernel::AddModule(std::shared_ptr<Module> module) {
     
-    std::cout << "[Kernel.cpp] Module added..." << std::endl;
+    AXIS_CORE_TRACE("Module {} added", module->GetName());
     module->OnModuleLoaded();     
 }
 
-void Core::Kernel::RegisterForEvent(Event& event, std::function<void(std::shared_ptr<void>)> function) {
+void Core::Kernel::RegisterForEvent(Core::Event& event, std::function<void(std::shared_ptr<void>)> function) {
     
     if (!Core::Kernel::HasEvent(event)) {
-    
-        std::cout << "[Kernel.cpp] " << 
-            event.GetName() << " registering with Kernel..." << std::endl; 
+        
+        AXIS_CORE_TRACE("Event {} registering with Kernel", event.GetName());
         
         std::vector<std::function<void(std::shared_ptr<void>)>> function_list;
         function_list.emplace_back(function);
@@ -102,16 +105,16 @@ void Core::Kernel::RegisterForEvent(Event& event, std::function<void(std::shared
     }
 }
 
-bool Core::Kernel::HasEvent(Event& event) {
+bool Core::Kernel::HasEvent(Core::Event& event) {
 
     return m_CallbackTable.contains(event.GetName());
 }
 
-void Core::Kernel::CallEvent(Event& event, std::shared_ptr<void> argument) {
+void Core::Kernel::CallEvent(Core::Event& event, std::shared_ptr<void> argument) {
 
     if (!Core::Kernel::HasEvent(event)) {
 
-        std::cerr << "[Kernel.cpp] Event not registered with the kernel..." << std::endl;
+        AXIS_CORE_TRACE("{} is not registered with the Kernel", event.GetName());
         return;
     }
     for (auto function : m_CallbackTable.at(event.GetName())) {

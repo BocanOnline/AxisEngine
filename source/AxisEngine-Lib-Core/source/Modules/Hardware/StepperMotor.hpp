@@ -19,10 +19,11 @@ namespace Core {
         StepperMotor(const Pin&, const Pin&, const Pin&);
         ~StepperMotor();
 
-        virtual void OnModuleLoaded();
+        virtual void OnModuleLoaded() override;
+        virtual std::string GetName() const override;
 
-        virtual void OnHalt(std::shared_ptr<void> argument);
-        virtual void OnEnable(std::shared_ptr<void> argument);
+        virtual void OnHalt(std::shared_ptr<void> argument) override;
+        virtual void OnEnable(std::shared_ptr<void> argument) override;
 
         void ChangeStepsPerMillimeter(float);
         void ChangeLastMilestone(float);

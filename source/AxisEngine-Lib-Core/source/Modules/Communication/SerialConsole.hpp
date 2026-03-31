@@ -21,6 +21,8 @@ namespace Core {
        
         // Module
         virtual void OnModuleLoaded() override;     
+        virtual std::string GetName() const override;
+        
         virtual void OnMainLoop(std::shared_ptr<void> argument) override;
         virtual void OnIdle(std::shared_ptr<void> argument) override;
        

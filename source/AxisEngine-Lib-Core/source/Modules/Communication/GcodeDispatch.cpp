@@ -19,12 +19,12 @@
 
 Core::GcodeDispatch::GcodeDispatch() {
 
-    std::cout << "[GcodeDispatch.cpp] GcodeDispatch created..." << std::endl;
+    AXIS_CORE_TRACE("GcodeDispatch constructed");
 }
 
 Core::GcodeDispatch::~GcodeDispatch() {
 
-    std::cout << "[GcodeDispatch.cpp] GcodeDispatch destroyed..." << std::endl;
+    AXIS_CORE_TRACE("GcodeDispatch destroyed");
 }
     
 void Core::GcodeDispatch::OnModuleLoaded() {
@@ -32,18 +32,23 @@ void Core::GcodeDispatch::OnModuleLoaded() {
     Core::ConsoleLineReceivedEvent on_console_line_received_event;
     auto on_console_line_received_function = [this](std::shared_ptr<void> argument){ this->Core::GcodeDispatch::OnConsoleLineReceived(argument); };
     this->RegisterForEvent(on_console_line_received_event, on_console_line_received_function);
-    std::cout << "[GcodeDispatch.cpp] GcodeDispatch registered for ConsoleLineReceivedEvent..." << std::endl;
+    AXIS_CORE_TRACE("GcodeDispatch registered for OnConsoleLineReceived");
+}
+        
+std::string Core::GcodeDispatch::GetName() const {
+
+    return "GcodeDispatch";
 }
 
 void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) {
 
-    std::cout << "[GcodeDispatch.cpp] GcodeDispatch called by ConsoleLineReceivedEvent..." << std::endl; 
+    AXIS_CORE_TRACE("GcodeDispatch called by OnConsoleLineReceived");
 
     std::shared_ptr<Core::SerialMessage> message = std::static_pointer_cast<Core::SerialMessage>(argument);
 
     if(message->Message.front() != 'G' && message->Message.front() != 'M') {
 
-        std::cout << "[GcodeDispatch.cpp] SerialMessage is not a supported GcodeCommand..." << std::endl;
+        AXIS_CORE_TRACE("SerialMessage is not a supported g-code");
         return;
     }
 
@@ -140,10 +145,8 @@ void Core::GcodeDispatch::OnConsoleLineReceived(std::shared_ptr<void> argument) 
         }
     } while(std::string::npos != n);
 
-    std::cout << "[GcodeDispatch.cpp] Gcode created..." << std::endl;
-    std::cout << "[GcodeDispatch.cpp] Command: ";
-    if(gcode->Has_G) { std::cout << "G" << gcode->GetValue_I('G') << std::endl; }
-    if(gcode->Has_M) { std::cout << "M" << gcode->GetValue_I('M') << std::endl; }
+    if(gcode->Has_G) { AXIS_CORE_TRACE("Gcode Received: G{}", gcode->GetValue_I('G'));}
+    if(gcode->Has_M) { AXIS_CORE_TRACE("Gcode Received: M{}", gcode->GetValue_I('M'));}
     
     Core::GcodeReceivedEvent on_gcode_received_event;
     Core::Kernel::Get().CallEvent(on_gcode_received_event, gcode);

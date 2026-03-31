@@ -24,6 +24,7 @@ namespace Core {
         virtual ~Robot() override;
         
         virtual void OnModuleLoaded() override;
+        virtual std::string GetName() const override;
 
         virtual void OnIdle(std::shared_ptr<void> argument) override;
         virtual void OnGcodeReceived(std::shared_ptr<void> argument) override;

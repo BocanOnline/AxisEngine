@@ -16,5 +16,5 @@ Core::GcodeReceivedEvent::~GcodeReceivedEvent() {}
 
 std::string Core::GcodeReceivedEvent::GetName() const {
 
-    return "GCODE_RECEIVED";
+    return "OnGcodeReceived";
 }

@@ -27,12 +27,12 @@ Core::Robot::Robot() {
     
     m_NumberOfActuators = 0;
 
-    std::cout << "[Robot.cpp] Robot created..." << std::endl;
+    AXIS_CORE_TRACE("Robot constructed");
 }
 
 Core::Robot::~Robot() {
 
-    std::cout << "[Robot.cpp] Robot destroyed..." << std::endl;
+    AXIS_CORE_TRACE("Robot destroyed");
 }
     
 void Core::Robot::OnModuleLoaded() {
@@ -40,22 +40,22 @@ void Core::Robot::OnModuleLoaded() {
     Core::IdleEvent on_idle_event;
     auto on_idle_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function);
-    std::cout << "[Robot.cpp] Robot registered for IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("Robot registered for OnIdle");
     
     Core::GcodeReceivedEvent on_gcode_received_event;
     auto on_gcode_received_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnGcodeReceived(argument); }; 
     this->RegisterForEvent(on_gcode_received_event, on_gcode_received_function);
-    std::cout << "[Robot.cpp] Robot registered for GcodeReceivedEvent..." << std::endl;
+    AXIS_CORE_TRACE("Robot registered for OnGcodeReceived");
     
     Core::SecondTickEvent on_second_tick_event;
     auto on_second_tick_function = [this](std::shared_ptr<void> argument){ this->Core::Robot::OnSecondTick(argument); }; 
     this->RegisterForEvent(on_second_tick_event, on_second_tick_function); 
-    std::cout << "[Robot.cpp] Robot registered for SecondTickEvent..." << std::endl;
+    AXIS_CORE_TRACE("Robot registered for OnSecondTick");
 
     // read configuration and register machine solution
     m_MachineSolution = std::make_shared<Core::CartesianSolution>();
     
-    std::cout << "[Robot.cpp] Machine Solution set to Cartesian..." << std::endl;
+    AXIS_CORE_TRACE("Machine Solution set to Cartesian");
 
     // read configuration and set values (default if no config)
     m_SeekRate = 100.0F;                    // mm/min
@@ -72,7 +72,7 @@ void Core::Robot::OnModuleLoaded() {
     m_AxisMaxSpeed.at(static_cast<int>(Core::Axis::Y)) = 1000.0F; // mm/s
     m_AxisMaxSpeed.at(static_cast<int>(Core::Axis::Z)) = 50.0F;   // mm/s
     
-    std::cout << "[Robot.cpp] Configuration set..." << std::endl;
+    AXIS_CORE_TRACE("Configuration complete");
 
     // create StepperMotors
     for(int i = 0; i < c_MaxActuators; i++) {
@@ -92,7 +92,7 @@ void Core::Robot::OnModuleLoaded() {
         m_NumberOfActuators++;
     }
     
-    std::cout << "[Robot.cpp] StepperMotors initialized..." << std::endl;
+    AXIS_CORE_TRACE("{} StepperMotors initialized", m_NumberOfActuators);
 
     // set actuator positions to current cartesian position (X0, Y0, Z0) 
     m_MachinePosition            = { 0.0F, 0.0F, 0.0F };
@@ -102,7 +102,7 @@ void Core::Robot::OnModuleLoaded() {
         m_Actuators.at(i).ChangeLastMilestone(m_ActuatorPosition.at(i));
     }
     
-    std::cout << "[Robot.cpp] Actuator Positions initialized..." << std::endl;
+    AXIS_CORE_TRACE("Actuator Positions initialized");
 
     // set endstop positions
     m_SoftEndstopEnabled = false;
@@ -110,48 +110,48 @@ void Core::Robot::OnModuleLoaded() {
     m_SoftEndstopMin     = { 0.0F, 0.0F, 0.0F };
     m_SoftEndstopMax     = { 200.0F, 200.0F, 50.0F };
     
-    std::cout << "[Robot.cpp] Endstop Positions initialized..." << std::endl;
+    AXIS_CORE_TRACE("Endstop Positions initialized");
+}
+
+std::string Core::Robot::GetName() const {
+
+    return "Robot";
 }
 
 void Core::Robot::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[Robot.cpp] Robot called by IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("Robot called by OnIdle");
 }
 
 void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
 
-    std::cout << "[Robot.cpp] Robot called by GcodeReceivedEvent..." << std::endl; 
+    AXIS_CORE_TRACE("Robot called by OnGcodeReceived");
     
     std::shared_ptr<Core::Gcode> gcode = std::static_pointer_cast<Core::Gcode>(argument);
 
-    Core::MotionMode motion_mode;
+    Core::MotionMode motion_mode = Core::MotionMode::None;
     
     if(gcode->Has_G) {
         switch(gcode->GetValue_I('G')) {
             case 0:
                 motion_mode = Core::MotionMode::Seek; 
-                std::cout << "[Robot.cpp] G0 received..." << std::endl; 
                 break;
             case 1:
                 motion_mode = Core::MotionMode::Linear;
-                std::cout << "[Robot.cpp] G1 received..." << std::endl; 
                 break;
             case 2:
                 motion_mode = Core::MotionMode::ClockwiseArc;
-                std::cout << "[Robot.cpp] G2 received..." << std::endl; 
                 break;
             case 3:
                 motion_mode = Core::MotionMode::CounterArc;
-                std::cout << "[Robot.cpp] G3 received..." << std::endl; 
                 break;
             default:
                 motion_mode = Core::MotionMode::None;
-                std::cout << "[Robot.cpp] G-Code is not a motion command..." << std::endl; 
                 break;
         }
     }
     if(motion_mode != Core::MotionMode::None) {
-        std::cout << "[Robot.cpp] Processing move..." << std::endl; 
+        AXIS_CORE_TRACE("Processing move");
         ProcessMove(gcode, motion_mode);
     } else {  
         m_IsG123 = false;
@@ -162,7 +162,7 @@ void Core::Robot::OnGcodeReceived(std::shared_ptr<void> argument) {
 
 void Core::Robot::OnSecondTick(std::shared_ptr<void> argument) {
 
-    std::cout << "[Robot.cpp] Robot called by SecondTickEvent..." << std::endl;
+    AXIS_CORE_TRACE("Robot called by OnSecondTick");
 }
         
 int Core::Robot::GetNumberRegisteredMotors() {
@@ -236,11 +236,11 @@ void Core::Robot::ProcessMove(std::shared_ptr<Core::Gcode> gcode, Core::MotionMo
     bool moved = false;
     switch(motion_mode) {
         case Core::MotionMode::Seek:
-            std::cout << "[Robot.cpp] Appending line..." << std::endl; 
+            AXIS_CORE_TRACE("Appending line");
             moved = AppendLine(gcode, target_position, m_SeekRate / m_SecondsPerMinute);
             break;
         case Core::MotionMode::Linear:
-            std::cout << "[Robot.cpp] Appending line..." << std::endl; 
+            AXIS_CORE_TRACE("Appending line");
             moved = AppendLine(gcode, target_position, m_FeedRate / m_SecondsPerMinute);
             break;
         case Core::MotionMode::ClockwiseArc:
@@ -328,10 +328,10 @@ bool Core::Robot::AppendLine(std::shared_ptr<Core::Gcode> gcode, Core::Cartesian
     }
 
     // append end of each section to the queue, call append_milestone 
-    std::cout << "[Robot.cpp] Appending milestone..." << std::endl; 
+    AXIS_CORE_TRACE("Appending milestone");
     if(AppendMilestone(target_position, rate)) {
         moved = true;
-        std::cout << "[Robot.cpp] Append milestone succeeded..." << std::endl; 
+        AXIS_CORE_TRACE("Append milestone succeeded");
     }
     m_NextCommandIsMCS = false;
 
@@ -491,6 +491,7 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     // AxisEngine Way: create block and call OnBlockReceived for Conveyer to grab and complete
     // acceleration and velocity computation
     std::shared_ptr<Core::Block> block = std::make_shared<Core::Block>();
+    AXIS_CORE_TRACE("Block constructed");
     
     if(total_distance > 0.0F) {
     
@@ -530,8 +531,6 @@ bool Core::Robot::AppendMilestone(Core::CartesianCoordinates target_position, fl
     block->Acceleration = acceleration;
     block->UnitVector = unit_vector;
     block->IsG123 = m_IsG123;
-    
-    std::cout << "[Robot.cpp] Block created..." << std::endl; 
 
     Core::BlockReceivedEvent on_block_received_event;
     Core::Kernel::Get().CallEvent(on_block_received_event, block);

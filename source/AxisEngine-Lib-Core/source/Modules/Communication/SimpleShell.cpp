@@ -17,12 +17,12 @@
 
 Core::SimpleShell::SimpleShell() {
 
-    std::cout << "[SimpleShell.cpp] SimpleShell created..." << std::endl;
+    AXIS_CORE_TRACE("SimpleShell constructed");
 }
 
 Core::SimpleShell::~SimpleShell() {
 
-    std::cout << "[SimpleShell.cpp] SimpleShell destroyed..." << std::endl;
+    AXIS_CORE_TRACE("SimpleShell destroyed");
 }
     
 void Core::SimpleShell::OnModuleLoaded() {
@@ -30,22 +30,27 @@ void Core::SimpleShell::OnModuleLoaded() {
     Core::ConsoleLineReceivedEvent on_console_line_received_event;
     auto on_console_line_received_function = [this](std::shared_ptr<void> argument){ this->Core::SimpleShell::OnConsoleLineReceived(argument); };
     this->RegisterForEvent(on_console_line_received_event, on_console_line_received_function);
-    std::cout << "[SimpleShell.cpp] SimpleShell registered for ConsoleLineReceivedEvent..." << std::endl;
+    AXIS_CORE_TRACE("SimpleShell registered for OnConsoleLineReceived");
+}
+
+std::string Core::SimpleShell::GetName() const {
+
+    return "SimpleShell";
 }
 
 void Core::SimpleShell::OnConsoleLineReceived(std::shared_ptr<void> argument) {
 
-    std::cout << "[SimpleShell.cpp] SimpleShell called by ConsoleLineReceivedEvent..." << std::endl; 
+    AXIS_CORE_TRACE("SimpleShell called by OnConsoleLineReceived");
 
     std::shared_ptr<Core::SerialMessage> message = std::static_pointer_cast<Core::SerialMessage>(argument);
 
     if(message->Message.front() != '$') {
 
-        std::cout << "[SimpleShell.cpp] SerialMessage is not a supported SimpleShell Command..." << std::endl;
+        AXIS_CORE_TRACE("SerialMessage is not a supported SimpleShell command");
         return;
     }
     
-    std::cout << "[SimpleShell.cpp] SimpleShell Command..." << std::endl;
+    AXIS_CORE_TRACE("SimpleShell command received");
 
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -39,12 +39,12 @@ Core::SerialConsole::SerialConsole() {
         default:
     }
 
-    std::cout << "[SerialConsole.cpp] SerialConsole created..." << std::endl;
+    AXIS_CORE_TRACE("SerialConsole constructed");
 }
 
 Core::SerialConsole::~SerialConsole() {
 
-    std::cout << "[SerialConsole.cpp] SerialConsole destroyed..." << std::endl;
+    AXIS_CORE_TRACE("SerialConsole destroyed");
 }
     
 void Core::SerialConsole::OnModuleLoaded() {
@@ -52,18 +52,23 @@ void Core::SerialConsole::OnModuleLoaded() {
     Core::MainLoopEvent on_main_loop_event;
     auto on_main_loop_function = [this](std::shared_ptr<void> argument){ this->Core::SerialConsole::OnMainLoop(argument); };
     this->RegisterForEvent(on_main_loop_event, on_main_loop_function); 
-    std::cout << "[SerialConsole.cpp] SerialConsole registered for MainLoopEvent..." << std::endl;
+    AXIS_CORE_TRACE("SerialConsole registered for OnMainLoop");
     
     Core::IdleEvent on_idle_event;
     auto on_idle_function = [this](std::shared_ptr<void> argument){ this->Core::SerialConsole::OnIdle(argument); };
     this->RegisterForEvent(on_idle_event, on_idle_function); 
-    std::cout << "[SerialConsole.cpp] SerialConsole registered for IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("SerialConsole registered for OnIdle");
 
+}
+
+std::string Core::SerialConsole::GetName() const {
+
+    return "SerialConsole";
 }
 
 void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
     
-    std::cout << "[SerialConsole.cpp] SerialConsole called by MainLoopEvent..." << std::endl; 
+    AXIS_CORE_TRACE("SerialConsole called by OnMainLoop");
 
     m_LineBuffer = m_Stream->GetLine();
 
@@ -84,8 +89,7 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
         std::shared_ptr<Core::SerialMessage> message = std::make_shared<Core::SerialMessage>();
         message->Message = m_LineBuffer; 
     
-        std::cout << "[SerialConsole.cpp] SerialMessage Received..." << std::endl;
-        std::cout << "[SerialConsole.cpp] " << m_LineBuffer << std::endl;
+        AXIS_CORE_TRACE("SerialMessage Received: {}", m_LineBuffer);
 
         Core::ConsoleLineReceivedEvent on_console_line_received_event;
         Core::Kernel::Get().CallEvent(on_console_line_received_event, message);
@@ -94,7 +98,7 @@ void Core::SerialConsole::OnMainLoop(std::shared_ptr<void> argument) {
 
 void Core::SerialConsole::OnIdle(std::shared_ptr<void> argument) {
 
-    std::cout << "[SerialConsole.cpp] SerialConsole called by IdleEvent..." << std::endl;
+    AXIS_CORE_TRACE("SerialConsole called by OnIdle");
 
     if(m_HaltFlag) {
 
@@ -111,7 +115,7 @@ bool Core::SerialConsole::HasLine() {
 
     if(m_LineBuffer.empty()) {
     
-        std::cout << "[SerialConsole.cpp] m_LineBuffer empty..." << std::endl;
+        AXIS_CORE_TRACE("Received line is empty");
         
         return false;
     }
